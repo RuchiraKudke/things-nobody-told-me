@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ knowledge.title }}</title>
+
+    <style>
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+        }
+
+        .navbar {
+            background: #111;
+            padding: 20px 8%;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .container {
+            width: 70%;
+            margin: 50px auto;
+        }
+
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            margin-top: 0;
+            font-size: 35px;
+        }
+
+        .description {
+            font-size: 18px;
+            line-height: 1.7;
+            color: #444;
+            margin: 25px 0;
+        }
+
+        .info {
+            margin-top: 20px;
+            line-height: 1.8;
+        }
+
+        .tag {
+            display: inline-block;
+            background: #eee;
+            padding: 7px 12px;
+            border-radius: 20px;
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 25px;
+            text-decoration: none;
+            color: #111;
+            font-weight: bold;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <div class="navbar">
+
+        <a href="/">Things Nobody Told Me</a>
+
+    </div>
+
+
+    <div class="container">
+
+        <div class="card">
+
+            <h1>
+                {{ knowledge.title }}
+            </h1>
+
+
+            <span class="tag">
+                {{ knowledge.category.name }}
+            </span>
+
+
+            <p class="description">
+                {{ knowledge.description }}
+            </p>
+
+
+            <div class="info">
+
+                <strong>📍 Location:</strong>
+
+                {{ knowledge.location.name }},
+                {{ knowledge.location.city }}
+
+                <br>
+
+
+                <strong>👤 Shared by:</strong>
+
+                {{ knowledge.author.username }}
+
+                <br>
+
+
+                <strong>👍 Confirmations:</strong>
+
+                {{ knowledge.confirmations }}
+
+                <br>
+
+
+                <strong>👎 Disagreements:</strong>
+
+                {{ knowledge.disagreements }}
+
+            </div>
+
+
+            <a href="/" class="back">
+                ← Back to Home
+            </a>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Things Nobody Told Me</title>
+
+
+    <style>
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+        }
+
+
+        /* NAVBAR */
+
+        .navbar {
+            background: white;
+            padding: 18px 7%;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+            color: #111;
+            text-decoration: none;
+        }
+
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-size: 15px;
+        }
+
+
+        .nav-links a:hover {
+            color: #000;
+        }
+
+
+        .login-btn {
+            border: 1px solid #222;
+            padding: 9px 16px;
+            border-radius: 7px;
+        }
+
+
+        .register-btn {
+            background: #222;
+            color: white !important;
+            padding: 10px 17px;
+            border-radius: 7px;
+        }
+
+
+        .register-btn:hover {
+            background: #444;
+        }
+
+
+        .welcome {
+            color: #555;
+            font-size: 15px;
+        }
+
+
+        .logout-btn {
+            background: #eee;
+            padding: 9px 15px;
+            border-radius: 7px;
+        }
+
+
+        .logout-btn:hover {
+            background: #ddd;
+        }
+
+
+        .share-btn {
+            color: #222 !important;
+            font-weight: 600;
+        }
+
+
+        .share-btn:hover {
+            text-decoration: underline;
+        }
+
+
+
+        /* HERO */
+
+        .hero {
+            background: #111;
+            color: white;
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+
+        .hero p {
+            font-size: 20px;
+            color: #ddd;
+        }
+
+
+        .search-box {
+            margin-top: 30px;
+        }
+
+
+        .search-box input {
+            width: 60%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+
+        .search-box form {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+
+        .search-box button {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+
+        .search-box button:hover {
+            background: #ddd;
+        }
+
+
+
+        /* CONTENT */
+
+        .container {
+            width: 85%;
+            margin: 40px auto;
+        }
+
+
+        .container h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+
+        .cards {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+
+        .card {
+            background: white;
+            width: 280px;
+            padding: 25px;
+            border-radius: 12px;
+
+            box-shadow:
+                0 3px 10px rgba(0,0,0,0.1);
+
+            transition: transform 0.2s ease;
+        }
+
+
+        .card:hover {
+            transform: translateY(-4px);
+        }
+
+
+        .card h3 {
+            margin-top: 0;
+        }
+
+
+        .card h3 a {
+            color: #111;
+            text-decoration: none;
+        }
+
+
+        .card h3 a:hover {
+            text-decoration: underline;
+        }
+
+
+        .card p {
+            color: #555;
+            line-height: 1.5;
+        }
+
+
+        .tag {
+            display: inline-block;
+            background: #eee;
+
+            padding: 6px 10px;
+
+            border-radius: 20px;
+
+            font-size: 13px;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- NAVBAR -->
+
+    <nav class="navbar">
+
+
+        <!-- LOGO -->
+
+        <a href="{% url 'home' %}" class="logo">
+
+            Things Nobody Told Me
+
+        </a>
+
+
+        <!-- NAVIGATION -->
+
+        <div class="nav-links">
+
+
+            <a href="{% url 'home' %}">
+                Home
+            </a>
+
+
+            {% if user.is_authenticated %}
+
+
+                <!-- SHARE A TIP -->
+
+                <a
+                    href="{% url 'share_tip' %}"
+                    class="share-btn"
+                >
+                    Share a Tip
+                </a>
+
+
+                <!-- USERNAME -->
+
+                <span class="welcome">
+
+                    Welcome, {{ user.username }}
+
+                </span>
+
+
+                <!-- LOGOUT -->
+
+                <a
+                    href="{% url 'logout' %}"
+                    class="logout-btn"
+                >
+                    Logout
+                </a>
+
+
+            {% else %}
+
+
+                <!-- LOGIN -->
+
+                <a
+                    href="{% url 'login' %}"
+                    class="login-btn"
+                >
+                    Login
+                </a>
+
+
+                <!-- REGISTER -->
+
+                <a
+                    href="{% url 'register' %}"
+                    class="register-btn"
+                >
+                    Register
+                </a>
+
+
+            {% endif %}
+
+
+        </div>
+
+    </nav>
+
+
+
+    <!-- HERO -->
+
+    <div class="hero">
+
+
+        <h1>
+            Things Nobody Told Me
+        </h1>
+
+
+        <p>
+            Real experiences. Useful local knowledge.
+        </p>
+
+
+        <!-- SEARCH -->
+
+        <div class="search-box">
+
+
+            <form method="GET" action="">
+
+
+                <input
+                    type="text"
+                    name="search"
+                    value="{{ search_query }}"
+                    placeholder="Search for a place, city or useful tip..."
+                >
+
+
+                <button type="submit">
+                    Search
+                </button>
+
+
+            </form>
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- KNOWLEDGE CARDS -->
+
+    <div class="container">
+
+
+        <h2>
+            Latest Things Nobody Told Me
+        </h2>
+
+
+        <div class="cards">
+
+
+            {% for knowledge in knowledge_list %}
+
+
+                <div class="card">
+
+
+                    <h3>
+
+                        <a
+                            href="{% url 'knowledge_detail' knowledge.pk %}"
+                        >
+
+                            {{ knowledge.title }}
+
+                        </a>
+
+                    </h3>
+
+
+                    <p>
+                        {{ knowledge.description }}
+                    </p>
+
+
+                    <span class="tag">
+
+                        {{ knowledge.category.name }}
+
+                    </span>
+
+
+                    <p>
+
+                        📍
+                        {{ knowledge.location.name }},
+                        {{ knowledge.location.city }}
+
+                    </p>
+
+
+                </div>
+
+
+            {% empty %}
+
+
+                <p>
+                    No knowledge available yet.
+                </p>
+
+
+            {% endfor %}
+
+
+        </div>
+
+
+    </div>
+
+
+</body>
+
+</html>
