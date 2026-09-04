@@ -21,17 +21,22 @@
             color: #111;
         }
 
+
         /* ================= NAVBAR ================= */
 
         .navbar {
             background: white;
             padding: 18px 7%;
+
             display: flex;
             justify-content: space-between;
             align-items: center;
+
             gap: 20px;
+
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
+
 
         .logo {
             font-size: 22px;
@@ -41,29 +46,37 @@
             white-space: nowrap;
         }
 
+
         .nav-links {
             display: flex;
             align-items: center;
             justify-content: flex-end;
+
             gap: 20px;
-            flex-wrap: wrap;
+
+            flex-wrap: nowrap;
         }
+
 
         .nav-links a {
             text-decoration: none;
             color: #333;
             font-size: 15px;
+            white-space: nowrap;
         }
+
 
         .nav-links a:hover {
             color: #000;
         }
+
 
         .login-btn {
             border: 1px solid #222;
             padding: 9px 16px;
             border-radius: 7px;
         }
+
 
         .register-btn {
             background: #222;
@@ -72,14 +85,18 @@
             border-radius: 7px;
         }
 
+
         .register-btn:hover {
             background: #444;
         }
 
+
         .welcome {
             color: #555;
             font-size: 15px;
+            white-space: nowrap;
         }
+
 
         .logout-btn {
             background: #eee;
@@ -87,18 +104,22 @@
             border-radius: 7px;
         }
 
+
         .logout-btn:hover {
             background: #ddd;
         }
+
 
         .share-btn {
             color: #222 !important;
             font-weight: 600;
         }
 
+
         .share-btn:hover {
             text-decoration: underline;
         }
+
 
 
         /* ================= HERO ================= */
@@ -107,13 +128,16 @@
             background: #111;
             color: white;
             text-align: center;
+
             padding: 80px 20px;
         }
+
 
         .hero h1 {
             font-size: 48px;
             margin: 0 0 15px;
         }
+
 
         .hero p {
             font-size: 20px;
@@ -121,43 +145,61 @@
             margin: 0;
         }
 
+
+
         /* ================= SEARCH ================= */
 
         .search-box {
             margin-top: 30px;
         }
 
+
         .search-box form {
             display: flex;
             justify-content: center;
+
             gap: 10px;
+
             max-width: 850px;
             margin: auto;
         }
 
+
         .search-box input {
             width: 100%;
+
             padding: 15px;
+
             border: none;
             border-radius: 8px;
+
             font-size: 16px;
+
             outline: none;
         }
 
+
         .search-box button {
             padding: 15px 25px;
+
             border: none;
             border-radius: 8px;
+
             cursor: pointer;
+
             font-size: 16px;
+
             background: white;
             color: #111;
+
             white-space: nowrap;
         }
+
 
         .search-box button:hover {
             background: #ddd;
         }
+
 
 
         /* ================= CONTENT ================= */
@@ -165,23 +207,31 @@
         .container {
             width: 85%;
             max-width: 1200px;
+
             margin: 40px auto;
         }
+
 
         .container h2 {
             text-align: center;
             margin-bottom: 30px;
         }
 
+
         .cards {
             display: grid;
+
             grid-template-columns: repeat(3, 1fr);
+
             gap: 20px;
         }
 
+
         .card {
             background: white;
+
             padding: 25px;
+
             border-radius: 12px;
 
             box-shadow:
@@ -190,36 +240,47 @@
             transition: transform 0.2s ease;
         }
 
+
         .card:hover {
             transform: translateY(-4px);
         }
+
 
         .card h3 {
             margin-top: 0;
             line-height: 1.4;
         }
 
+
         .card h3 a {
             color: #111;
             text-decoration: none;
         }
 
+
         .card h3 a:hover {
             text-decoration: underline;
         }
+
 
         .card p {
             color: #555;
             line-height: 1.5;
         }
 
+
         .tag {
             display: inline-block;
+
             background: #eee;
+
             padding: 6px 10px;
+
             border-radius: 20px;
+
             font-size: 13px;
         }
+
 
 
         /* ================= TABLET ================= */
@@ -230,21 +291,26 @@
                 padding: 16px 5%;
             }
 
+
             .logo {
                 font-size: 20px;
             }
+
 
             .nav-links {
                 gap: 12px;
             }
 
+
             .hero {
                 padding: 65px 20px;
             }
 
+
             .hero h1 {
                 font-size: 40px;
             }
+
 
             .cards {
                 grid-template-columns: repeat(2, 1fr);
@@ -253,93 +319,133 @@
         }
 
 
+
         /* ================= MOBILE ================= */
 
         @media (max-width: 600px) {
 
             .navbar {
                 flex-direction: column;
+
                 align-items: center;
+
                 text-align: center;
-                padding: 15px 20px;
+
+                padding: 15px 10px;
             }
+
 
             .logo {
                 font-size: 20px;
+
                 white-space: normal;
             }
 
+
             .nav-links {
                 width: 100%;
+
+                display: flex;
+
+                flex-direction: row;
+
                 justify-content: center;
-                gap: 10px;
+
+                align-items: center;
+
+                gap: 8px;
+
+                flex-wrap: nowrap;
             }
+
 
             .nav-links a,
             .welcome {
-                font-size: 14px;
+                font-size: 13px;
+
+                white-space: nowrap;
             }
+
 
             .login-btn,
             .register-btn,
             .logout-btn {
-                padding: 8px 12px;
+                padding: 7px 9px;
             }
+
 
             .hero {
                 padding: 55px 15px;
             }
+
 
             .hero h1 {
                 font-size: 32px;
                 line-height: 1.2;
             }
 
+
             .hero p {
                 font-size: 17px;
                 line-height: 1.5;
             }
 
+
             .search-box {
                 margin-top: 25px;
             }
 
+
             .search-box form {
                 flex-direction: column;
+
                 width: 100%;
             }
+
 
             .search-box input {
                 width: 100%;
+
                 padding: 14px;
             }
+
 
             .search-box button {
                 width: 100%;
+
                 padding: 14px;
             }
 
+
             .container {
                 width: 92%;
+
                 margin: 30px auto;
             }
 
+
             .container h2 {
                 font-size: 24px;
+
                 line-height: 1.3;
             }
 
+
             .cards {
                 grid-template-columns: 1fr;
+
                 gap: 15px;
             }
 
+
             .card {
                 width: 100%;
+
                 padding: 20px;
             }
 
         }
+
 
 
         /* ================= SMALL MOBILE ================= */
@@ -347,17 +453,40 @@
         @media (max-width: 400px) {
 
             .nav-links {
-                flex-direction: column;
-                gap: 8px;
+                flex-direction: row;
+
+                justify-content: center;
+
+                align-items: center;
+
+                gap: 6px;
+
+                flex-wrap: nowrap;
             }
+
+
+            .nav-links a,
+            .welcome {
+                font-size: 12px;
+            }
+
+
+            .login-btn,
+            .register-btn,
+            .logout-btn {
+                padding: 6px 8px;
+            }
+
 
             .hero h1 {
                 font-size: 28px;
             }
 
+
             .hero p {
                 font-size: 15px;
             }
+
 
             .container h2 {
                 font-size: 21px;
@@ -377,12 +506,16 @@
 
     <nav class="navbar">
 
+
         <a href="{% url 'home' %}" class="logo">
+
             Things Nobody Told Me
+
         </a>
 
 
         <div class="nav-links">
+
 
             <a href="{% url 'home' %}">
                 Home
@@ -390,6 +523,7 @@
 
 
             {% if user.is_authenticated %}
+
 
                 <a
                     href="{% url 'share_tip' %}"
@@ -400,7 +534,9 @@
 
 
                 <span class="welcome">
+
                     Welcome, {{ user.username }}
+
                 </span>
 
 
@@ -411,7 +547,9 @@
                     Logout
                 </a>
 
+
             {% else %}
+
 
                 <a
                     href="{% url 'login' %}"
@@ -428,29 +566,41 @@
                     Register
                 </a>
 
+
             {% endif %}
+
 
         </div>
 
+
     </nav>
+
 
 
     <!-- ================= HERO ================= -->
 
     <div class="hero">
 
+
         <h1>
+
             Things Nobody Told Me
+
         </h1>
 
+
         <p>
+
             Real experiences. Useful local knowledge.
+
         </p>
 
 
         <div class="search-box">
 
+
             <form method="GET" action="">
+
 
                 <input
                     type="text"
@@ -459,71 +609,102 @@
                     placeholder="Search for a place, city or useful tip..."
                 >
 
+
                 <button type="submit">
+
                     Search
+
                 </button>
+
 
             </form>
 
+
         </div>
 
+
     </div>
+
 
 
     <!-- ================= KNOWLEDGE CARDS ================= -->
 
     <div class="container">
 
+
         <h2>
+
             Latest Things Nobody Told Me
+
         </h2>
 
 
         <div class="cards">
 
+
             {% for knowledge in knowledge_list %}
+
 
                 <div class="card">
 
+
                     <h3>
+
 
                         <a
                             href="{% url 'knowledge_detail' knowledge.pk %}"
                         >
+
                             {{ knowledge.title }}
+
                         </a>
+
 
                     </h3>
 
 
                     <p>
+
                         {{ knowledge.description }}
+
                     </p>
 
 
                     <span class="tag">
+
                         {{ knowledge.category.name }}
+
                     </span>
 
 
                     <p>
+
                         📍
+
                         {{ knowledge.location.name }},
                         {{ knowledge.location.city }}
+
                     </p>
+
 
                 </div>
 
 
             {% empty %}
 
+
                 <p>
+
                     No knowledge available yet.
+
                 </p>
+
 
             {% endfor %}
 
+
         </div>
+
 
     </div>
 
