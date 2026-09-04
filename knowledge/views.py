@@ -1,10 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
 from .models import Knowledge, Location, Category
+
 
 def home(request):
 
@@ -39,7 +40,8 @@ def home(request):
 
 def knowledge_detail(request, pk):
 
-    knowledge = Knowledge.objects.get(
+    knowledge = get_object_or_404(
+        Knowledge,
         pk=pk,
         status='approved'
     )
@@ -47,24 +49,40 @@ def knowledge_detail(request, pk):
     return render(
         request,
         'knowledge/detail.html',
-        {'knowledge': knowledge}
+        {
+            'knowledge': knowledge
+        }
     )
+
 
 def register(request):
 
     if request.method == 'POST':
 
-        username = request.POST.get('username')
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-        confirm_password = request.POST.get('confirm_password')
+        username = request.POST.get('username', '').strip()
+        email = request.POST.get('email', '').strip()
+        password = request.POST.get('password', '')
+        confirm_password = request.POST.get('confirm_password', '')
+
+        if not username or not email or not password:
+            messages.error(
+                request,
+                'Please fill in all required fields.'
+            )
+            return redirect('register')
 
         if password != confirm_password:
-            messages.error(request, 'Passwords do not match.')
+            messages.error(
+                request,
+                'Passwords do not match.'
+            )
             return redirect('register')
 
         if User.objects.filter(username=username).exists():
-            messages.error(request, 'Username already exists.')
+            messages.error(
+                request,
+                'Username already exists.'
+            )
             return redirect('register')
 
         user = User.objects.create_user(
@@ -77,15 +95,18 @@ def register(request):
 
         return redirect('home')
 
-    return render(request, 'knowledge/register.html')
+    return render(
+        request,
+        'knowledge/register.html'
+    )
 
 
 def user_login(request):
 
     if request.method == 'POST':
 
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+        username = request.POST.get('username', '').strip()
+        password = request.POST.get('password', '')
 
         user = authenticate(
             request,
@@ -99,19 +120,18 @@ def user_login(request):
 
             return redirect('home')
 
-        else:
+        messages.error(
+            request,
+            'Invalid username or password.'
+        )
 
-            messages.error(
-                request,
-                'Invalid username or password.'
-            )
-
-            return redirect('login')
+        return redirect('login')
 
     return render(
         request,
         'knowledge/login.html'
     )
+
 
 def user_logout(request):
 
@@ -125,24 +145,141 @@ def share_tip(request):
 
     if request.method == 'POST':
 
-        title = request.POST.get('title')
-        description = request.POST.get('description')
-        location_id = request.POST.get('location')
+        title = request.POST.get('title', '').strip()
+        description = request.POST.get('description', '').strip()
         category_id = request.POST.get('category')
+        location_id = request.POST.get('location')
+
+        # New location fields
+        new_location_name = request.POST.get(
+            'new_location_name',
+            ''
+        ).strip()
+
+        new_location_city = request.POST.get(
+            'new_location_city',
+            ''
+        ).strip()
+
+        new_location_type = request.POST.get(
+            'new_location_type',
+            ''
+        ).strip()
+
+        # ---------------------------------
+        # BASIC VALIDATION
+        # ---------------------------------
+
+        if not title or not description:
+            messages.error(
+                request,
+                'Please enter a title and description.'
+            )
+            return redirect('share_tip')
+
+        if not category_id:
+            messages.error(
+                request,
+                'Please select a category.'
+            )
+            return redirect('share_tip')
+
+        # ---------------------------------
+        # CATEGORY VALIDATION
+        # ---------------------------------
+
+        category = get_object_or_404(
+            Category,
+            pk=category_id
+        )
+
+        # ---------------------------------
+        # LOCATION HANDLING
+        # ---------------------------------
+
+        if location_id == 'new':
+
+            # User selected "Other / Add New Location"
+
+            if not new_location_name:
+                messages.error(
+                    request,
+                    'Please enter the new location name.'
+                )
+                return redirect('share_tip')
+
+            if not new_location_city:
+                messages.error(
+                    request,
+                    'Please enter the city.'
+                )
+                return redirect('share_tip')
+
+            if not new_location_type:
+                new_location_type = 'Other'
+
+            # Check whether same location already exists
+            location = Location.objects.filter(
+                name__iexact=new_location_name,
+                city__iexact=new_location_city
+            ).first()
+
+            if location is None:
+
+                location = Location.objects.create(
+                    name=new_location_name,
+                    city=new_location_city,
+                    location_type=new_location_type
+                )
+
+        else:
+
+            # Existing location selected
+
+            if not location_id:
+                messages.error(
+                    request,
+                    'Please select a location.'
+                )
+                return redirect('share_tip')
+
+            location = get_object_or_404(
+                Location,
+                pk=location_id
+            )
+
+        # ---------------------------------
+        # CREATE KNOWLEDGE
+        # ---------------------------------
 
         Knowledge.objects.create(
             title=title,
             description=description,
-            location_id=location_id,
-            category_id=category_id,
+            location=location,
+            category=category,
             author=request.user,
             status='pending'
         )
 
+        messages.success(
+            request,
+            'Your tip has been submitted for review.'
+        )
+
         return redirect('home')
 
-    locations = Location.objects.all().order_by('city', 'name')
-    categories = Category.objects.all().order_by('name')
+    # ---------------------------------
+    # GET REQUEST
+    # ---------------------------------
+
+    locations = Location.objects.all().order_by(
+        'city',
+        'name'
+    )
+
+    categories = Category.objects.all().order_by(
+        'name'
+    )
 
     return render(
         request,
