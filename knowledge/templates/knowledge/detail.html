@@ -6,70 +6,357 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>{{ knowledge.title }}</title>
+    <title>{{ knowledge.title|default:"Knowledge Detail" }} - Things Nobody Told Me</title>
 
     <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
 
         body {
             margin: 0;
             font-family: Arial, sans-serif;
             background: #f5f5f5;
+            color: #111;
         }
+
+
+        /* ================= NAVBAR ================= */
 
         .navbar {
             background: #111;
-            padding: 20px 8%;
+            padding: 18px 7%;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         }
+
 
         .navbar a {
             color: white;
             text-decoration: none;
-            font-size: 20px;
+        }
+
+
+        .logo {
+            font-size: 21px;
             font-weight: bold;
         }
 
-        .container {
-            width: 70%;
-            margin: 50px auto;
+
+        .home-link {
+            font-size: 15px;
+            padding: 9px 15px;
+
+            border: 1px solid #555;
+            border-radius: 7px;
         }
+
+
+        .home-link:hover {
+            background: #333;
+        }
+
+
+        /* ================= MAIN CONTAINER ================= */
+
+        .container {
+            width: 85%;
+            max-width: 900px;
+
+            margin: 45px auto;
+        }
+
+
+        /* ================= CARD ================= */
 
         .card {
             background: white;
+
             padding: 40px;
+
             border-radius: 15px;
-            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+
+            box-shadow:
+                0 3px 15px rgba(0, 0, 0, 0.1);
         }
+
+
+        /* ================= TITLE ================= */
 
         h1 {
-            margin-top: 0;
-            font-size: 35px;
+            margin: 0 0 18px;
+
+            font-size: 36px;
+
+            line-height: 1.3;
+
+            word-wrap: break-word;
         }
 
-        .description {
-            font-size: 18px;
-            line-height: 1.7;
-            color: #444;
-            margin: 25px 0;
-        }
 
-        .info {
-            margin-top: 20px;
-            line-height: 1.8;
-        }
+        /* ================= TAG ================= */
 
         .tag {
             display: inline-block;
+
             background: #eee;
-            padding: 7px 12px;
+
+            padding: 7px 13px;
+
             border-radius: 20px;
+
+            font-size: 13px;
+
+            color: #333;
         }
+
+
+        /* ================= DESCRIPTION ================= */
+
+        .description {
+            font-size: 18px;
+
+            line-height: 1.8;
+
+            color: #444;
+
+            margin: 28px 0;
+
+            white-space: pre-line;
+
+            word-wrap: break-word;
+        }
+
+
+        /* ================= DIVIDER ================= */
+
+        .divider {
+            border: none;
+
+            border-top: 1px solid #eee;
+
+            margin: 30px 0;
+        }
+
+
+        /* ================= INFORMATION ================= */
+
+        .info {
+            line-height: 2;
+
+            color: #444;
+
+            font-size: 15px;
+        }
+
+
+        .info-row {
+            margin-bottom: 8px;
+        }
+
+
+        .info strong {
+            color: #222;
+        }
+
+
+        /* ================= BACK BUTTON ================= */
 
         .back {
             display: inline-block;
-            margin-top: 25px;
+
+            margin-top: 30px;
+
+            padding: 11px 17px;
+
+            background: #222;
+
+            color: white;
+
             text-decoration: none;
-            color: #111;
-            font-weight: bold;
+
+            border-radius: 7px;
+
+            font-size: 14px;
+        }
+
+
+        .back:hover {
+            background: #444;
+        }
+
+
+        /* ================= TABLET ================= */
+
+        @media (max-width: 900px) {
+
+            .navbar {
+                padding: 16px 5%;
+            }
+
+
+            .container {
+                width: 90%;
+
+                margin: 35px auto;
+            }
+
+
+            .card {
+                padding: 32px;
+            }
+
+
+            h1 {
+                font-size: 32px;
+            }
+
+        }
+
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 600px) {
+
+            .navbar {
+                padding: 15px 20px;
+
+                gap: 12px;
+            }
+
+
+            .logo {
+                font-size: 18px;
+
+                line-height: 1.3;
+            }
+
+
+            .home-link {
+                font-size: 14px;
+
+                padding: 8px 12px;
+
+                white-space: nowrap;
+            }
+
+
+            .container {
+                width: 92%;
+
+                margin: 25px auto;
+            }
+
+
+            .card {
+                padding: 23px;
+
+                border-radius: 12px;
+            }
+
+
+            h1 {
+                font-size: 27px;
+
+                line-height: 1.3;
+
+                margin-bottom: 15px;
+            }
+
+
+            .tag {
+                font-size: 12px;
+
+                padding: 6px 10px;
+            }
+
+
+            .description {
+                font-size: 16px;
+
+                line-height: 1.7;
+
+                margin: 22px 0;
+            }
+
+
+            .info {
+                font-size: 14px;
+
+                line-height: 1.8;
+            }
+
+
+            .info-row {
+                margin-bottom: 10px;
+            }
+
+
+            .back {
+                width: 100%;
+
+                text-align: center;
+
+                padding: 12px;
+
+                margin-top: 25px;
+            }
+
+        }
+
+
+        /* ================= SMALL MOBILE ================= */
+
+        @media (max-width: 400px) {
+
+            .navbar {
+                flex-direction: column;
+
+                align-items: center;
+
+                text-align: center;
+            }
+
+
+            .logo {
+                font-size: 18px;
+            }
+
+
+            .home-link {
+                width: 100%;
+
+                text-align: center;
+            }
+
+
+            .container {
+                width: 94%;
+
+                margin-top: 20px;
+            }
+
+
+            .card {
+                padding: 20px;
+            }
+
+
+            h1 {
+                font-size: 24px;
+            }
+
+
+            .description {
+                font-size: 15px;
+            }
+
         }
 
     </style>
@@ -79,70 +366,137 @@
 
 <body>
 
-    <div class="navbar">
 
-        <a href="/">Things Nobody Told Me</a>
+    <!-- ================= NAVBAR ================= -->
 
-    </div>
+    <nav class="navbar">
+
+        <a href="{% url 'home' %}" class="logo">
+            Things Nobody Told Me
+        </a>
 
 
-    <div class="container">
+        <a href="{% url 'home' %}" class="home-link">
+            ← Home
+        </a>
+
+    </nav>
+
+
+
+    <!-- ================= CONTENT ================= -->
+
+    <main class="container">
 
         <div class="card">
 
+
+            <!-- TITLE -->
+
             <h1>
-                {{ knowledge.title }}
+                {{ knowledge.title|default:"Untitled Knowledge" }}
             </h1>
 
 
-            <span class="tag">
-                {{ knowledge.category.name }}
-            </span>
+            <!-- CATEGORY -->
 
+            {% if knowledge.category %}
+
+                <span class="tag">
+                    {{ knowledge.category.name }}
+                </span>
+
+            {% endif %}
+
+
+
+            <!-- DESCRIPTION -->
 
             <p class="description">
-                {{ knowledge.description }}
+
+                {{ knowledge.description|default:"No description available." }}
+
             </p>
 
 
+
+            <hr class="divider">
+
+
+
+            <!-- INFORMATION -->
+
             <div class="info">
 
-                <strong>📍 Location:</strong>
 
-                {{ knowledge.location.name }},
-                {{ knowledge.location.city }}
+                {% if knowledge.location %}
 
-                <br>
+                    <div class="info-row">
 
+                        <strong>📍 Location:</strong>
 
-                <strong>👤 Shared by:</strong>
+                        {{ knowledge.location.name }}
 
-                {{ knowledge.author.username }}
+                        {% if knowledge.location.city %}
+                            , {{ knowledge.location.city }}
+                        {% endif %}
 
-                <br>
+                    </div>
 
-
-                <strong>👍 Confirmations:</strong>
-
-                {{ knowledge.confirmations }}
-
-                <br>
+                {% endif %}
 
 
-                <strong>👎 Disagreements:</strong>
 
-                {{ knowledge.disagreements }}
+                {% if knowledge.author %}
+
+                    <div class="info-row">
+
+                        <strong>👤 Shared by:</strong>
+
+                        {{ knowledge.author.username }}
+
+                    </div>
+
+                {% endif %}
+
+
+
+                <div class="info-row">
+
+                    <strong>👍 Confirmations:</strong>
+
+                    {{ knowledge.confirmations|default:"0" }}
+
+                </div>
+
+
+
+                <div class="info-row">
+
+                    <strong>👎 Disagreements:</strong>
+
+                    {{ knowledge.disagreements|default:"0" }}
+
+                </div>
+
 
             </div>
 
 
-            <a href="/" class="back">
+
+            <!-- BACK BUTTON -->
+
+            <a href="{% url 'home' %}" class="back">
+
                 ← Back to Home
+
             </a>
+
 
         </div>
 
-    </div>
+    </main>
+
 
 </body>
 
