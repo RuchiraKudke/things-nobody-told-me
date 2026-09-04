@@ -1,0 +1,288 @@
+[
+{
+  "model": "knowledge.location",
+  "pk": 1,
+  "fields": {
+    "name": "Lonavala Railway Station",
+    "city": "Lonavala",
+    "location_type": "Railway Station"
+  }
+},
+{
+  "model": "knowledge.location",
+  "pk": 2,
+  "fields": {
+    "name": "Lonavala Bus Stand",
+    "city": "Lonavala",
+    "location_type": "Bus Stand"
+  }
+},
+{
+  "model": "knowledge.location",
+  "pk": 3,
+  "fields": {
+    "name": "Lonavala Market",
+    "city": "Lonavala",
+    "location_type": "Market"
+  }
+},
+{
+  "model": "knowledge.location",
+  "pk": 4,
+  "fields": {
+    "name": "Bhushi Dam",
+    "city": "Lonavala",
+    "location_type": "Tourist Place"
+  }
+},
+{
+  "model": "knowledge.location",
+  "pk": 5,
+  "fields": {
+    "name": "Tiger Point",
+    "city": "Lonavala",
+    "location_type": "Tourist Place"
+  }
+},
+{
+  "model": "knowledge.location",
+  "pk": 6,
+  "fields": {
+    "name": "Rajmachi Point",
+    "city": "Lonavala",
+    "location_type": "Tourist Place"
+  }
+},
+{
+  "model": "knowledge.location",
+  "pk": 7,
+  "fields": {
+    "name": "Lonavala Main Road",
+    "city": "Lonavala",
+    "location_type": "Road"
+  }
+},
+{
+  "model": "knowledge.location",
+  "pk": 8,
+  "fields": {
+    "name": "Khandala Railway Station",
+    "city": "Khandala",
+    "location_type": "Railway Station"
+  }
+},
+{
+  "model": "knowledge.category",
+  "pk": 1,
+  "fields": {
+    "name": "Transport"
+  }
+},
+{
+  "model": "knowledge.category",
+  "pk": 2,
+  "fields": {
+    "name": "PG & Hostel"
+  }
+},
+{
+  "model": "knowledge.category",
+  "pk": 3,
+  "fields": {
+    "name": "College"
+  }
+},
+{
+  "model": "knowledge.category",
+  "pk": 4,
+  "fields": {
+    "name": "Government Office"
+  }
+},
+{
+  "model": "knowledge.category",
+  "pk": 5,
+  "fields": {
+    "name": "Food"
+  }
+},
+{
+  "model": "knowledge.category",
+  "pk": 6,
+  "fields": {
+    "name": "Shopping"
+  }
+},
+{
+  "model": "knowledge.category",
+  "pk": 7,
+  "fields": {
+    "name": "Healthcare"
+  }
+},
+{
+  "model": "knowledge.category",
+  "pk": 8,
+  "fields": {
+    "name": "Safety"
+  }
+},
+{
+  "model": "knowledge.category",
+  "pk": 9,
+  "fields": {
+    "name": "Local Tips"
+  }
+},
+{
+  "model": "knowledge.category",
+  "pk": 10,
+  "fields": {
+    "name": "Events"
+  }
+},
+{
+  "model": "knowledge.knowledge",
+  "pk": 1,
+  "fields": {
+    "title": "Station Exit 2 is closer to the bus stand",
+    "description": "If you are going towards the bus stand,\r\nExit 2 is more convenient than Exit 1.",
+    "location": 1,
+    "category": 1,
+    "author": 1,
+    "created_at": "2026-09-03T06:38:37.256Z",
+    "last_confirmed": null,
+    "confirmations": 1,
+    "disagreements": 0,
+    "status": "approved"
+  }
+},
+{
+  "model": "knowledge.knowledge",
+  "pk": 2,
+  "fields": {
+    "title": "Bus stand gets crowded during peak hours",
+    "description": "The Lonavala Bus Stand can get quite crowded during morning and evening peak hours, so reaching a little early can make the journey easier.",
+    "location": 2,
+    "category": 1,
+    "author": 1,
+    "created_at": "2026-09-03T06:40:48.015Z",
+    "last_confirmed": null,
+    "confirmations": 1,
+    "disagreements": 0,
+    "status": "approved"
+  }
+},
+{
+  "model": "knowledge.knowledge",
+  "pk": 3,
+  "fields": {
+    "title": "Carry cash for small purchases in the market",
+    "description": "Some small shops and local vendors around Lonavala Market may prefer cash, so keeping some cash with you can be useful.",
+    "location": 3,
+    "category": 6,
+    "author": 1,
+    "created_at": "2026-09-03T06:42:19.950Z",
+    "last_confirmed": null,
+    "confirmations": 1,
+    "disagreements": 0,
+    "status": "approved"
+  }
+},
+{
+  "model": "knowledge.knowledge",
+  "pk": 4,
+  "fields": {
+    "title": "Weekends can be very crowded",
+    "description": "Bhushi Dam can become very crowded on weekends and holidays. Visiting earlier can help you avoid some of the rush.",
+    "location": 4,
+    "category": 9,
+    "author": 1,
+    "created_at": "2026-09-03T06:43:51.259Z",
+    "last_confirmed": null,
+    "confirmations": 1,
+    "disagreements": 0,
+    "status": "approved"
+  }
+},
+{
+  "model": "knowledge.knowledge",
+  "pk": 5,
+  "fields": {
+    "title": "Carry water when visiting Tiger Point",
+    "description": "It is useful to carry your own water when spending time around Tiger Point, especially if you plan to stay there for a while.",
+    "location": 5,
+    "category": 9,
+    "author": 1,
+    "created_at": "2026-09-03T06:44:32.510Z",
+    "last_confirmed": null,
+    "confirmations": 1,
+    "disagreements": 0,
+    "status": "approved"
+  }
+},
+{
+  "model": "knowledge.knowledge",
+  "pk": 6,
+  "fields": {
+    "title": "Road conditions can affect travel time",
+    "description": "Travel time around Rajmachi Point can vary depending on traffic and road conditions, so keeping some extra time in your plan is useful.",
+    "location": 6,
+    "category": 1,
+    "author": 1,
+    "created_at": "2026-09-03T06:45:34.479Z",
+    "last_confirmed": null,
+    "confirmations": 1,
+    "disagreements": 0,
+    "status": "approved"
+  }
+},
+{
+  "model": "knowledge.knowledge",
+  "pk": 7,
+  "fields": {
+    "title": "Traffic increases during weekends",
+    "description": "Lonavala Main Road can experience increased traffic during weekends and holidays, which may make short journeys take longer.",
+    "location": 7,
+    "category": 1,
+    "author": 1,
+    "created_at": "2026-09-03T06:46:11.249Z",
+    "last_confirmed": null,
+    "confirmations": 1,
+    "disagreements": 0,
+    "status": "approved"
+  }
+},
+{
+  "model": "knowledge.knowledge",
+  "pk": 8,
+  "fields": {
+    "title": "Check your train timing before leaving",
+    "description": "Checking the latest train timing before travelling from Khandala Railway Station can help avoid unnecessary waiting.",
+    "location": 8,
+    "category": 1,
+    "author": 1,
+    "created_at": "2026-09-03T06:46:47.754Z",
+    "last_confirmed": null,
+    "confirmations": 1,
+    "disagreements": 0,
+    "status": "approved"
+  }
+},
+{
+  "model": "knowledge.knowledge",
+  "pk": 9,
+  "fields": {
+    "title": "Keep some extra time for weekend travel",
+    "description": "Travel around Lonavala can take longer on weekends because of increased traffic, so keeping some extra travel time can be helpful.",
+    "location": 7,
+    "category": 1,
+    "author": 1,
+    "created_at": "2026-09-03T08:35:10.341Z",
+    "last_confirmed": null,
+    "confirmations": 0,
+    "disagreements": 0,
+    "status": "approved"
+  }
+}
+]
