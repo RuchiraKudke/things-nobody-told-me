@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Share a Tip - Things Nobody Told Me</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            color: #111;
+        }
+
+        /* NAVBAR */
+
+        .navbar {
+            background: white;
+            padding: 18px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+            color: #111;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-size: 15px;
+        }
+
+        .home-btn {
+            border: 1px solid #222;
+            padding: 9px 16px;
+            border-radius: 7px;
+        }
+
+        .logout-btn {
+            background: #222;
+            color: white !important;
+            padding: 10px 17px;
+            border-radius: 7px;
+        }
+
+        /* CONTAINER */
+
+        .container {
+            width: 90%;
+            max-width: 700px;
+            margin: 45px auto;
+        }
+
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        /* FORM */
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: Arial, sans-serif;
+            outline: none;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: #222;
+        }
+
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            background: #222;
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .submit-btn:hover {
+            background: #444;
+        }
+
+        /* MESSAGES */
+
+        .messages {
+            margin-bottom: 20px;
+        }
+
+        .message {
+            background: #eee;
+            padding: 12px;
+            border-radius: 7px;
+            margin-bottom: 8px;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #222;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        /* TABLET */
+
+        @media (max-width: 700px) {
+
+            .navbar {
+                padding: 15px 5%;
+            }
+
+            .logo {
+                font-size: 20px;
+            }
+
+            .nav-links {
+                gap: 10px;
+            }
+
+            .nav-links a {
+                font-size: 14px;
+            }
+
+            .container {
+                width: 94%;
+                margin: 30px auto;
+            }
+
+            .card {
+                padding: 28px 22px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 500px) {
+
+            .navbar {
+                flex-direction: column;
+                padding: 15px 20px;
+                gap: 12px;
+            }
+
+            .logo {
+                white-space: normal;
+                text-align: center;
+                font-size: 20px;
+            }
+
+            .nav-links {
+                width: 100%;
+                justify-content: center;
+                gap: 10px;
+            }
+
+            .nav-links a {
+                font-size: 15px;
+            }
+
+            .home-btn,
+            .logout-btn {
+                padding: 9px 13px;
+            }
+
+            .container {
+                width: 94%;
+                margin: 25px auto;
+            }
+
+            .card {
+                padding: 25px 18px;
+                border-radius: 12px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+            .subtitle {
+                font-size: 15px;
+            }
+
+            input,
+            textarea,
+            select {
+                font-size: 16px;
+                padding: 14px;
+            }
+
+            .submit-btn {
+                padding: 15px;
+                font-size: 17px;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+
+    <nav class="navbar">
+
+        <a href="{% url 'home' %}" class="logo">
+            Things Nobody Told Me
+        </a>
+
+        <div class="nav-links">
+
+            <a href="{% url 'home' %}" class="home-btn">
+                Home
+            </a>
+
+            <a href="{% url 'logout' %}" class="logout-btn">
+                Logout
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <!-- MAIN -->
+
+    <div class="container">
+
+        <div class="card">
+
+            <h1>Share a Tip</h1>
+
+            <p class="subtitle">
+                Share something useful that you wish someone had told you.
+            </p>
+
+
+            {% if messages %}
+
+                <div class="messages">
+
+                    {% for message in messages %}
+
+                        <div class="message">
+                            {{ message }}
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+
+                <!-- TITLE -->
+
+                <div class="form-group">
+
+                    <label for="title">
+                        Title
+                    </label>
+
+                    <input
+                        type="text"
+                        id="title"
+                        name="title"
+                        placeholder="Example: Best time to visit Lonavala"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- DESCRIPTION -->
+
+                <div class="form-group">
+
+                    <label for="description">
+                        Description
+                    </label>
+
+                    <textarea
+                        id="description"
+                        name="description"
+                        placeholder="Share your experience or useful information..."
+                        required
+                    ></textarea>
+
+                </div>
+
+
+                <!-- CATEGORY -->
+
+                <div class="form-group">
+
+                    <label for="category">
+                        Category
+                    </label>
+
+                    <select id="category" name="category" required>
+
+                        <option value="">
+                            Select a category
+                        </option>
+
+                        {% for category in categories %}
+
+                            <option value="{{ category.id }}">
+                                {{ category.name }}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- LOCATION -->
+
+                <div class="form-group">
+
+                    <label for="location">
+                        Location
+                    </label>
+
+                    <select id="location" name="location" required>
+
+                        <option value="">
+                            Select a location
+                        </option>
+
+                        {% for location in locations %}
+
+                            <option value="{{ location.id }}">
+                                {{ location.name }}, {{ location.city }}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- SUBMIT -->
+
+                <button type="submit" class="submit-btn">
+                    Share Tip
+                </button>
+
+            </form>
+
+
+            <a href="{% url 'home' %}" class="back-link">
+                ← Back to Home
+            </a>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>
