@@ -155,9 +155,15 @@ EMAIL_USE_TLS = True
 # These MUST come from Render Environment Variables.
 # Do NOT put email/password directly in this file.
 
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
+EMAIL_HOST_USER = os.environ.get(
+    'EMAIL_HOST_USER',
+    ''
+)
 
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+EMAIL_HOST_PASSWORD = os.environ.get(
+    'EMAIL_HOST_PASSWORD',
+    ''
+)
 
 # Email address shown as sender
 DEFAULT_FROM_EMAIL = os.environ.get(
@@ -172,6 +178,20 @@ DEFAULT_FROM_EMAIL = os.environ.get(
 
 # Password reset link will remain valid for 1 hour
 PASSWORD_RESET_TIMEOUT = 3600
+
+
+# ============================================================
+# AUTHENTICATION
+# ============================================================
+
+# URL Django will use when @login_required redirects
+LOGIN_URL = '/login/'
+
+# URL after successful login
+LOGIN_REDIRECT_URL = '/'
+
+# URL after logout
+LOGOUT_REDIRECT_URL = '/'
 
 
 # ============================================================
