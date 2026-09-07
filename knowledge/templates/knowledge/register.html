@@ -1,10 +1,10 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
 
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Register - Things Nobody Told Me</title>
@@ -17,12 +17,9 @@
             padding: 0;
         }
 
-
         body {
             font-family: Arial, sans-serif;
-
             background: #f5f7fb;
-
             min-height: 100vh;
 
             display: flex;
@@ -32,11 +29,7 @@
             padding: 20px;
         }
 
-
-        /* REGISTER CARD */
-
         .register-container {
-
             width: 100%;
             max-width: 420px;
 
@@ -50,11 +43,7 @@
                 0 8px 25px rgba(0, 0, 0, 0.08);
         }
 
-
-        /* HEADING */
-
         h1 {
-
             text-align: center;
 
             margin-bottom: 28px;
@@ -66,17 +55,34 @@
             line-height: 1.2;
         }
 
+        .message {
+            background: #ffe5e5;
 
-        /* FORM */
+            color: #b00020;
+
+            padding: 12px;
+
+            border-radius: 7px;
+
+            margin-bottom: 18px;
+
+            text-align: center;
+
+            font-size: 14px;
+
+            line-height: 1.4;
+        }
+
+        .message.success {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
 
         .form-group {
-
             margin-bottom: 20px;
         }
 
-
         label {
-
             display: block;
 
             margin-bottom: 8px;
@@ -88,9 +94,7 @@
             font-size: 15px;
         }
 
-
         input {
-
             width: 100%;
 
             min-height: 52px;
@@ -106,32 +110,21 @@
             outline: none;
 
             background: white;
-
-            -webkit-appearance: none;
         }
 
-
         input:focus {
-
             border-color: #555;
 
             box-shadow:
                 0 0 0 3px rgba(0, 0, 0, 0.06);
         }
 
-
         input::placeholder {
-
             color: #999;
-
             font-size: 15px;
         }
 
-
-        /* CREATE ACCOUNT BUTTON */
-
         button {
-
             width: 100%;
 
             min-height: 54px;
@@ -158,45 +151,15 @@
                         transform 0.1s ease;
         }
 
-
         button:hover {
-
             background: #444;
         }
 
-
         button:active {
-
             transform: scale(0.98);
         }
 
-
-        /* ERROR / SUCCESS MESSAGE */
-
-        .message {
-
-            background: #ffe5e5;
-
-            color: #b00020;
-
-            padding: 12px;
-
-            border-radius: 7px;
-
-            margin-bottom: 18px;
-
-            text-align: center;
-
-            font-size: 14px;
-
-            line-height: 1.4;
-        }
-
-
-        /* LOGIN LINK */
-
         .bottom-text {
-
             text-align: center;
 
             margin-top: 24px;
@@ -208,9 +171,7 @@
             line-height: 1.5;
         }
 
-
         .bottom-text a {
-
             color: #222;
 
             font-weight: bold;
@@ -222,155 +183,103 @@
             font-size: 15px;
         }
 
-
         .bottom-text a:hover {
-
             text-decoration: underline;
         }
-
-
-        /* TABLET */
 
         @media (max-width: 600px) {
 
             body {
-
                 padding: 16px;
             }
 
-
             .register-container {
-
                 max-width: 100%;
-
                 padding: 30px 24px;
-
                 border-radius: 12px;
             }
 
-
             h1 {
-
                 font-size: 28px;
-
                 margin-bottom: 25px;
             }
 
-
             .form-group {
-
                 margin-bottom: 18px;
             }
 
-
             input {
-
                 min-height: 52px;
-
                 font-size: 16px;
             }
 
-
             button {
-
                 min-height: 54px;
-
                 font-size: 17px;
             }
-
         }
-
-
-        /* SMALL MOBILE */
 
         @media (max-width: 400px) {
 
             body {
-
                 padding: 12px;
             }
 
-
             .register-container {
-
                 padding: 26px 18px;
-
                 border-radius: 10px;
             }
 
-
             h1 {
-
                 font-size: 25px;
-
                 margin-bottom: 23px;
             }
 
-
             label {
-
                 font-size: 15px;
             }
 
-
             input {
-
                 min-height: 52px;
-
                 padding: 13px;
-
                 font-size: 16px;
             }
 
-
             input::placeholder {
-
                 font-size: 14px;
             }
 
-
             button {
-
                 min-height: 54px;
-
                 font-size: 17px;
             }
 
-
             .bottom-text {
-
                 font-size: 14px;
             }
 
-
             .bottom-text a {
-
                 font-size: 15px;
             }
-
         }
 
     </style>
 
 </head>
 
-
 <body>
 
-
     <div class="register-container">
-
 
         <h1>
             Create Your Account
         </h1>
 
-
         {% if messages %}
 
             {% for message in messages %}
 
-                <div class="message">
+                <div class="message {% if message.tags %}{{ message.tags }}{% endif %}">
                     {{ message }}
                 </div>
 
@@ -378,83 +287,85 @@
 
         {% endif %}
 
-
         <form method="POST">
 
             {% csrf_token %}
 
-
             <div class="form-group">
 
-                <label>
+                <label for="username">
                     Username
                 </label>
 
                 <input
                     type="text"
+                    id="username"
                     name="username"
                     placeholder="Enter your username"
+                    autocomplete="username"
                     required
                 >
 
             </div>
 
-
             <div class="form-group">
 
-                <label>
+                <label for="email">
                     Email
                 </label>
 
                 <input
                     type="email"
+                    id="email"
                     name="email"
                     placeholder="Enter your email"
+                    autocomplete="email"
                     required
                 >
 
             </div>
 
-
             <div class="form-group">
 
-                <label>
+                <label for="password">
                     Password
                 </label>
 
                 <input
                     type="password"
+                    id="password"
                     name="password"
                     placeholder="Enter your password"
+                    autocomplete="new-password"
+                    minlength="8"
                     required
                 >
 
             </div>
 
-
             <div class="form-group">
 
-                <label>
+                <label for="confirm_password">
                     Confirm Password
                 </label>
 
                 <input
                     type="password"
+                    id="confirm_password"
                     name="confirm_password"
                     placeholder="Confirm your password"
+                    autocomplete="new-password"
+                    minlength="8"
                     required
                 >
 
             </div>
 
-
             <button type="submit">
                 Create Account
             </button>
 
-
         </form>
-
 
         <p class="bottom-text">
 
@@ -466,10 +377,9 @@
 
         </p>
 
-
     </div>
-
 
 </body>
 
 </html>
+```

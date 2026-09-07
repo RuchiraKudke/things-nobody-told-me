@@ -1,3 +1,4 @@
+```python
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -82,7 +83,7 @@ def register(request):
         email = request.POST.get(
             'email',
             ''
-        ).strip()
+        ).strip().lower()
 
         password = request.POST.get(
             'password',
@@ -98,30 +99,17 @@ def register(request):
         # BASIC VALIDATION
         # -----------------------------------------
 
-        if not username or not email or not password:
+        if not username or not email or not password or not confirm_password:
 
             messages.error(
                 request,
-                'Please fill in all required fields.'
+                'Please fill in all fields.'
             )
 
             return redirect('register')
 
         # -----------------------------------------
-        # PASSWORD VALIDATION
-        # -----------------------------------------
-
-        if password != confirm_password:
-
-            messages.error(
-                request,
-                'Passwords do not match.'
-            )
-
-            return redirect('register')
-
-        # -----------------------------------------
-        # USERNAME CHECK
+        # USERNAME VALIDATION
         # -----------------------------------------
 
         if User.objects.filter(
@@ -130,13 +118,13 @@ def register(request):
 
             messages.error(
                 request,
-                'Username already exists.'
+                'Username already exists. Please choose another username.'
             )
 
             return redirect('register')
 
         # -----------------------------------------
-        # EMAIL CHECK
+        # EMAIL VALIDATION
         # -----------------------------------------
 
         if User.objects.filter(
@@ -151,6 +139,28 @@ def register(request):
             return redirect('register')
 
         # -----------------------------------------
+        # PASSWORD VALIDATION
+        # -----------------------------------------
+
+        if len(password) < 8:
+
+            messages.error(
+                request,
+                'Password must contain at least 8 characters.'
+            )
+
+            return redirect('register')
+
+        if password != confirm_password:
+
+            messages.error(
+                request,
+                'Passwords do not match.'
+            )
+
+            return redirect('register')
+
+        # -----------------------------------------
         # CREATE USER
         # -----------------------------------------
 
@@ -160,15 +170,29 @@ def register(request):
             password=password
         )
 
-        # Automatically login after registration
-        login(request, user)
+        # Make sure the account is active
+        user.is_active = True
+        user.save()
+
+        # -----------------------------------------
+        # AUTOMATIC LOGIN
+        # -----------------------------------------
+
+        login(
+            request,
+            user
+        )
 
         messages.success(
             request,
-            'Registration successful! Welcome to Things Nobody Told Me.'
+            f'Registration successful! Welcome, {user.username}.'
         )
 
         return redirect('home')
+
+    # -----------------------------------------
+    # GET REQUEST
+    # -----------------------------------------
 
     return render(
         request,
@@ -207,8 +231,10 @@ def user_login(request):
 
             return redirect('login')
 
+        user = None
+
         # -----------------------------------------
-        # TRY USERNAME FIRST
+        # LOGIN USING USERNAME
         # -----------------------------------------
 
         user = authenticate(
@@ -218,7 +244,7 @@ def user_login(request):
         )
 
         # -----------------------------------------
-        # TRY EMAIL LOGIN
+        # LOGIN USING EMAIL
         # -----------------------------------------
 
         if user is None:
@@ -236,12 +262,24 @@ def user_login(request):
                 )
 
         # -----------------------------------------
-        # LOGIN SUCCESS
+        # CHECK LOGIN RESULT
         # -----------------------------------------
 
         if user is not None:
 
-            login(request, user)
+            if not user.is_active:
+
+                messages.error(
+                    request,
+                    'This account is inactive. Please contact the administrator.'
+                )
+
+                return redirect('login')
+
+            login(
+                request,
+                user
+            )
 
             messages.success(
                 request,
@@ -261,6 +299,10 @@ def user_login(request):
 
         return redirect('login')
 
+    # -----------------------------------------
+    # GET REQUEST
+    # -----------------------------------------
+
     return render(
         request,
         'knowledge/login.html'
@@ -272,10 +314,6 @@ def user_login(request):
 # =========================================================
 
 def forgot_password(request):
-
-    # -----------------------------------------
-    # STEP 1 - ENTER EMAIL
-    # -----------------------------------------
 
     if request.method == 'POST':
 
@@ -293,7 +331,7 @@ def forgot_password(request):
             email = request.POST.get(
                 'email',
                 ''
-            ).strip()
+            ).strip().lower()
 
             if not email:
 
@@ -316,9 +354,6 @@ def forgot_password(request):
                 )
 
                 return redirect('forgot_password')
-
-            # Email exists.
-            # Show password reset form.
 
             return render(
                 request,
@@ -410,7 +445,10 @@ def forgot_password(request):
             # UPDATE PASSWORD
             # -------------------------------------
 
-            user.set_password(new_password)
+            user.set_password(
+                new_password
+            )
+
             user.save()
 
             messages.success(
@@ -544,9 +582,6 @@ def share_tip(request):
 
         if location_id == 'new':
 
-            # User selected:
-            # Other / Add New Location
-
             if not new_location_name:
 
                 messages.error(
@@ -564,8 +599,6 @@ def share_tip(request):
                 )
 
                 return redirect('share_tip')
-
-            # Default location type
 
             if not new_location_type:
 
@@ -632,9 +665,9 @@ def share_tip(request):
 
         return redirect('home')
 
-    # =====================================================
+    # -----------------------------------------
     # GET REQUEST
-    # =====================================================
+    # -----------------------------------------
 
     locations = Location.objects.all().order_by(
         'city',
@@ -653,3 +686,4 @@ def share_tip(request):
             'categories': categories
         }
     )
+```
