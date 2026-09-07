@@ -218,7 +218,6 @@ def user_login(request):
         )
 
         # -----------------------------------------
-        # IF USERNAME LOGIN FAILS,
         # TRY EMAIL LOGIN
         # -----------------------------------------
 
@@ -265,6 +264,169 @@ def user_login(request):
     return render(
         request,
         'knowledge/login.html'
+    )
+
+
+# =========================================================
+# FORGOT PASSWORD / RESET PASSWORD
+# =========================================================
+
+def forgot_password(request):
+
+    # -----------------------------------------
+    # STEP 1 - ENTER EMAIL
+    # -----------------------------------------
+
+    if request.method == 'POST':
+
+        action = request.POST.get(
+            'action',
+            'check_email'
+        )
+
+        # -----------------------------------------
+        # CHECK EMAIL
+        # -----------------------------------------
+
+        if action == 'check_email':
+
+            email = request.POST.get(
+                'email',
+                ''
+            ).strip()
+
+            if not email:
+
+                messages.error(
+                    request,
+                    'Please enter your email address.'
+                )
+
+                return redirect('forgot_password')
+
+            user = User.objects.filter(
+                email__iexact=email
+            ).first()
+
+            if user is None:
+
+                messages.error(
+                    request,
+                    'No account found with this email address.'
+                )
+
+                return redirect('forgot_password')
+
+            # Email exists.
+            # Show password reset form.
+
+            return render(
+                request,
+                'knowledge/forgot_password.html',
+                {
+                    'reset_user': user,
+                    'email_verified': True
+                }
+            )
+
+        # -----------------------------------------
+        # RESET PASSWORD
+        # -----------------------------------------
+
+        elif action == 'reset_password':
+
+            user_id = request.POST.get(
+                'user_id'
+            )
+
+            new_password = request.POST.get(
+                'new_password',
+                ''
+            )
+
+            confirm_password = request.POST.get(
+                'confirm_password',
+                ''
+            )
+
+            user = get_object_or_404(
+                User,
+                pk=user_id
+            )
+
+            # -------------------------------------
+            # PASSWORD VALIDATION
+            # -------------------------------------
+
+            if not new_password:
+
+                messages.error(
+                    request,
+                    'Please enter a new password.'
+                )
+
+                return render(
+                    request,
+                    'knowledge/forgot_password.html',
+                    {
+                        'reset_user': user,
+                        'email_verified': True
+                    }
+                )
+
+            if len(new_password) < 8:
+
+                messages.error(
+                    request,
+                    'Password must contain at least 8 characters.'
+                )
+
+                return render(
+                    request,
+                    'knowledge/forgot_password.html',
+                    {
+                        'reset_user': user,
+                        'email_verified': True
+                    }
+                )
+
+            if new_password != confirm_password:
+
+                messages.error(
+                    request,
+                    'Passwords do not match.'
+                )
+
+                return render(
+                    request,
+                    'knowledge/forgot_password.html',
+                    {
+                        'reset_user': user,
+                        'email_verified': True
+                    }
+                )
+
+            # -------------------------------------
+            # UPDATE PASSWORD
+            # -------------------------------------
+
+            user.set_password(new_password)
+            user.save()
+
+            messages.success(
+                request,
+                'Password reset successfully. Please login with your new password.'
+            )
+
+            return redirect('login')
+
+    # -----------------------------------------
+    # GET REQUEST
+    # -----------------------------------------
+
+    return render(
+        request,
+        'knowledge/forgot_password.html'
     )
 
 
@@ -404,6 +566,7 @@ def share_tip(request):
                 return redirect('share_tip')
 
             # Default location type
+
             if not new_location_type:
 
                 new_location_type = 'Other'
