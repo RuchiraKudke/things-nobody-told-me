@@ -1,4 +1,3 @@
-```python
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -21,20 +20,13 @@ def home(request):
     ).order_by('-created_at')
 
     if search_query:
-
-        knowledge_list = knowledge_list.filter(
-            title__icontains=search_query
-        ) | knowledge_list.filter(
-            description__icontains=search_query
-        ) | knowledge_list.filter(
-            category__name__icontains=search_query
-        ) | knowledge_list.filter(
-            location__name__icontains=search_query
-        ) | knowledge_list.filter(
-            location__city__icontains=search_query
-        )
-
-        knowledge_list = knowledge_list.distinct()
+        knowledge_list = (
+            knowledge_list.filter(title__icontains=search_query)
+            | knowledge_list.filter(description__icontains=search_query)
+            | knowledge_list.filter(category__name__icontains=search_query)
+            | knowledge_list.filter(location__name__icontains=search_query)
+            | knowledge_list.filter(location__city__icontains=search_query)
+        ).distinct()
 
     return render(
         request,
@@ -100,12 +92,10 @@ def register(request):
         # -----------------------------------------
 
         if not username or not email or not password or not confirm_password:
-
             messages.error(
                 request,
                 'Please fill in all fields.'
             )
-
             return redirect('register')
 
         # -----------------------------------------
@@ -120,7 +110,6 @@ def register(request):
                 request,
                 'Username already exists. Please choose another username.'
             )
-
             return redirect('register')
 
         # -----------------------------------------
@@ -135,7 +124,6 @@ def register(request):
                 request,
                 'An account with this email already exists.'
             )
-
             return redirect('register')
 
         # -----------------------------------------
@@ -148,7 +136,6 @@ def register(request):
                 request,
                 'Password must contain at least 8 characters.'
             )
-
             return redirect('register')
 
         if password != confirm_password:
@@ -157,7 +144,6 @@ def register(request):
                 request,
                 'Passwords do not match.'
             )
-
             return redirect('register')
 
         # -----------------------------------------
@@ -170,7 +156,6 @@ def register(request):
             password=password
         )
 
-        # Make sure the account is active
         user.is_active = True
         user.save()
 
@@ -178,10 +163,7 @@ def register(request):
         # AUTOMATIC LOGIN
         # -----------------------------------------
 
-        login(
-            request,
-            user
-        )
+        login(request, user)
 
         messages.success(
             request,
@@ -228,7 +210,6 @@ def user_login(request):
                 request,
                 'Please enter your username/email and password.'
             )
-
             return redirect('login')
 
         user = None
@@ -273,13 +254,9 @@ def user_login(request):
                     request,
                     'This account is inactive. Please contact the administrator.'
                 )
-
                 return redirect('login')
 
-            login(
-                request,
-                user
-            )
+            login(request, user)
 
             messages.success(
                 request,
@@ -445,10 +422,7 @@ def forgot_password(request):
             # UPDATE PASSWORD
             # -------------------------------------
 
-            user.set_password(
-                new_password
-            )
-
+            user.set_password(new_password)
             user.save()
 
             messages.success(
@@ -686,4 +660,3 @@ def share_tip(request):
             'categories': categories
         }
     )
-```
