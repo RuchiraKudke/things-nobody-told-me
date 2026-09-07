@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
@@ -92,10 +92,12 @@ def register(request):
         # -----------------------------------------
 
         if not username or not email or not password or not confirm_password:
+
             messages.error(
                 request,
                 'Please fill in all fields.'
             )
+
             return redirect('register')
 
         # -----------------------------------------
@@ -110,6 +112,7 @@ def register(request):
                 request,
                 'Username already exists. Please choose another username.'
             )
+
             return redirect('register')
 
         # -----------------------------------------
@@ -124,6 +127,7 @@ def register(request):
                 request,
                 'An account with this email already exists.'
             )
+
             return redirect('register')
 
         # -----------------------------------------
@@ -136,6 +140,7 @@ def register(request):
                 request,
                 'Password must contain at least 8 characters.'
             )
+
             return redirect('register')
 
         if password != confirm_password:
@@ -144,6 +149,7 @@ def register(request):
                 request,
                 'Passwords do not match.'
             )
+
             return redirect('register')
 
         # -----------------------------------------
@@ -160,10 +166,15 @@ def register(request):
         user.save()
 
         # -----------------------------------------
-        # AUTOMATIC LOGIN
+        # AUTOMATIC LOGIN AFTER REGISTRATION
         # -----------------------------------------
 
-        login(request, user)
+        user.backend = 'django.contrib.auth.backends.ModelBackend'
+
+        login(
+            request,
+            user
+        )
 
         messages.success(
             request,
@@ -210,71 +221,83 @@ def user_login(request):
                 request,
                 'Please enter your username/email and password.'
             )
+
             return redirect('login')
 
-        user = None
-
         # -----------------------------------------
-        # LOGIN USING USERNAME
+        # FIND USER BY USERNAME
         # -----------------------------------------
 
-        user = authenticate(
-            request,
-            username=login_input,
-            password=password
-        )
+        user = User.objects.filter(
+            username__iexact=login_input
+        ).first()
 
         # -----------------------------------------
-        # LOGIN USING EMAIL
+        # IF NOT FOUND, FIND BY EMAIL
         # -----------------------------------------
 
         if user is None:
 
-            matching_user = User.objects.filter(
+            user = User.objects.filter(
                 email__iexact=login_input
             ).first()
 
-            if matching_user:
-
-                user = authenticate(
-                    request,
-                    username=matching_user.username,
-                    password=password
-                )
-
         # -----------------------------------------
-        # CHECK LOGIN RESULT
+        # USER NOT FOUND
         # -----------------------------------------
 
-        if user is not None:
+        if user is None:
 
-            if not user.is_active:
-
-                messages.error(
-                    request,
-                    'This account is inactive. Please contact the administrator.'
-                )
-                return redirect('login')
-
-            login(request, user)
-
-            messages.success(
+            messages.error(
                 request,
-                f'Welcome back, {user.username}!'
+                'Invalid username/email or password.'
             )
 
-            return redirect('home')
+            return redirect('login')
 
         # -----------------------------------------
-        # LOGIN FAILED
+        # CHECK ACCOUNT STATUS
         # -----------------------------------------
 
-        messages.error(
+        if not user.is_active:
+
+            messages.error(
+                request,
+                'This account is inactive. Please contact the administrator.'
+            )
+
+            return redirect('login')
+
+        # -----------------------------------------
+        # CHECK PASSWORD
+        # -----------------------------------------
+
+        if not user.check_password(password):
+
+            messages.error(
+                request,
+                'Invalid username/email or password.'
+            )
+
+            return redirect('login')
+
+        # -----------------------------------------
+        # LOGIN USER
+        # -----------------------------------------
+
+        user.backend = 'django.contrib.auth.backends.ModelBackend'
+
+        login(
             request,
-            'Invalid username/email or password.'
+            user
         )
 
-        return redirect('login')
+        messages.success(
+            request,
+            f'Welcome back, {user.username}!'
+        )
+
+        return redirect('home')
 
     # -----------------------------------------
     # GET REQUEST
