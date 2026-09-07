@@ -7,15 +7,20 @@ from django.contrib.auth.decorators import login_required
 from .models import Knowledge, Location, Category
 
 
+# =========================================================
+# HOME
+# =========================================================
+
 def home(request):
 
-    search_query = request.GET.get('search', '')
+    search_query = request.GET.get('search', '').strip()
 
     knowledge_list = Knowledge.objects.filter(
         status='approved'
     ).order_by('-created_at')
 
     if search_query:
+
         knowledge_list = knowledge_list.filter(
             title__icontains=search_query
         ) | knowledge_list.filter(
@@ -28,6 +33,8 @@ def home(request):
             location__city__icontains=search_query
         )
 
+        knowledge_list = knowledge_list.distinct()
+
     return render(
         request,
         'knowledge/home.html',
@@ -37,6 +44,10 @@ def home(request):
         }
     )
 
+
+# =========================================================
+# KNOWLEDGE DETAIL
+# =========================================================
 
 def knowledge_detail(request, pk):
 
@@ -55,35 +66,93 @@ def knowledge_detail(request, pk):
     )
 
 
+# =========================================================
+# REGISTER
+# =========================================================
+
 def register(request):
 
     if request.method == 'POST':
 
-        username = request.POST.get('username', '').strip()
-        email = request.POST.get('email', '').strip()
-        password = request.POST.get('password', '')
-        confirm_password = request.POST.get('confirm_password', '')
+        username = request.POST.get(
+            'username',
+            ''
+        ).strip()
+
+        email = request.POST.get(
+            'email',
+            ''
+        ).strip()
+
+        password = request.POST.get(
+            'password',
+            ''
+        )
+
+        confirm_password = request.POST.get(
+            'confirm_password',
+            ''
+        )
+
+        # -----------------------------------------
+        # BASIC VALIDATION
+        # -----------------------------------------
 
         if not username or not email or not password:
+
             messages.error(
                 request,
                 'Please fill in all required fields.'
             )
+
             return redirect('register')
 
+        # -----------------------------------------
+        # PASSWORD VALIDATION
+        # -----------------------------------------
+
         if password != confirm_password:
+
             messages.error(
                 request,
                 'Passwords do not match.'
             )
+
             return redirect('register')
 
-        if User.objects.filter(username=username).exists():
+        # -----------------------------------------
+        # USERNAME CHECK
+        # -----------------------------------------
+
+        if User.objects.filter(
+            username__iexact=username
+        ).exists():
+
             messages.error(
                 request,
                 'Username already exists.'
             )
+
             return redirect('register')
+
+        # -----------------------------------------
+        # EMAIL CHECK
+        # -----------------------------------------
+
+        if User.objects.filter(
+            email__iexact=email
+        ).exists():
+
+            messages.error(
+                request,
+                'An account with this email already exists.'
+            )
+
+            return redirect('register')
+
+        # -----------------------------------------
+        # CREATE USER
+        # -----------------------------------------
 
         user = User.objects.create_user(
             username=username,
@@ -91,7 +160,13 @@ def register(request):
             password=password
         )
 
+        # Automatically login after registration
         login(request, user)
+
+        messages.success(
+            request,
+            'Registration successful! Welcome to Things Nobody Told Me.'
+        )
 
         return redirect('home')
 
@@ -101,28 +176,88 @@ def register(request):
     )
 
 
+# =========================================================
+# LOGIN
+# =========================================================
+
 def user_login(request):
 
     if request.method == 'POST':
 
-        username = request.POST.get('username', '').strip()
-        password = request.POST.get('password', '')
+        login_input = request.POST.get(
+            'username',
+            ''
+        ).strip()
+
+        password = request.POST.get(
+            'password',
+            ''
+        )
+
+        # -----------------------------------------
+        # BASIC VALIDATION
+        # -----------------------------------------
+
+        if not login_input or not password:
+
+            messages.error(
+                request,
+                'Please enter your username/email and password.'
+            )
+
+            return redirect('login')
+
+        # -----------------------------------------
+        # TRY USERNAME FIRST
+        # -----------------------------------------
 
         user = authenticate(
             request,
-            username=username,
+            username=login_input,
             password=password
         )
+
+        # -----------------------------------------
+        # IF USERNAME LOGIN FAILS,
+        # TRY EMAIL LOGIN
+        # -----------------------------------------
+
+        if user is None:
+
+            matching_user = User.objects.filter(
+                email__iexact=login_input
+            ).first()
+
+            if matching_user:
+
+                user = authenticate(
+                    request,
+                    username=matching_user.username,
+                    password=password
+                )
+
+        # -----------------------------------------
+        # LOGIN SUCCESS
+        # -----------------------------------------
 
         if user is not None:
 
             login(request, user)
 
+            messages.success(
+                request,
+                f'Welcome back, {user.username}!'
+            )
+
             return redirect('home')
+
+        # -----------------------------------------
+        # LOGIN FAILED
+        # -----------------------------------------
 
         messages.error(
             request,
-            'Invalid username or password.'
+            'Invalid username/email or password.'
         )
 
         return redirect('login')
@@ -133,24 +268,59 @@ def user_login(request):
     )
 
 
+# =========================================================
+# LOGOUT
+# =========================================================
+
 def user_logout(request):
 
     logout(request)
 
+    messages.success(
+        request,
+        'You have been logged out successfully.'
+    )
+
     return redirect('home')
 
+
+# =========================================================
+# SHARE TIP
+# =========================================================
 
 @login_required
 def share_tip(request):
 
     if request.method == 'POST':
 
-        title = request.POST.get('title', '').strip()
-        description = request.POST.get('description', '').strip()
-        category_id = request.POST.get('category')
-        location_id = request.POST.get('location')
+        # -----------------------------------------
+        # GET FORM DATA
+        # -----------------------------------------
 
-        # New location fields
+        title = request.POST.get(
+            'title',
+            ''
+        ).strip()
+
+        description = request.POST.get(
+            'description',
+            ''
+        ).strip()
+
+        category_id = request.POST.get(
+            'category',
+            ''
+        ).strip()
+
+        location_id = request.POST.get(
+            'location',
+            ''
+        ).strip()
+
+        # -----------------------------------------
+        # NEW LOCATION DATA
+        # -----------------------------------------
+
         new_location_name = request.POST.get(
             'new_location_name',
             ''
@@ -166,63 +336,90 @@ def share_tip(request):
             ''
         ).strip()
 
-        # ---------------------------------
+        # -----------------------------------------
         # BASIC VALIDATION
-        # ---------------------------------
+        # -----------------------------------------
 
-        if not title or not description:
+        if not title:
+
             messages.error(
                 request,
-                'Please enter a title and description.'
+                'Please enter a title.'
             )
+
+            return redirect('share_tip')
+
+        if not description:
+
+            messages.error(
+                request,
+                'Please enter a description.'
+            )
+
             return redirect('share_tip')
 
         if not category_id:
+
             messages.error(
                 request,
                 'Please select a category.'
             )
+
             return redirect('share_tip')
 
-        # ---------------------------------
-        # CATEGORY VALIDATION
-        # ---------------------------------
+        # -----------------------------------------
+        # CATEGORY
+        # -----------------------------------------
 
         category = get_object_or_404(
             Category,
             pk=category_id
         )
 
-        # ---------------------------------
-        # LOCATION HANDLING
-        # ---------------------------------
+        # -----------------------------------------
+        # LOCATION
+        # -----------------------------------------
 
         if location_id == 'new':
 
-            # User selected "Other / Add New Location"
+            # User selected:
+            # Other / Add New Location
 
             if not new_location_name:
+
                 messages.error(
                     request,
                     'Please enter the new location name.'
                 )
+
                 return redirect('share_tip')
 
             if not new_location_city:
+
                 messages.error(
                     request,
                     'Please enter the city.'
                 )
+
                 return redirect('share_tip')
 
+            # Default location type
             if not new_location_type:
+
                 new_location_type = 'Other'
 
-            # Check whether same location already exists
+            # -------------------------------------
+            # CHECK EXISTING LOCATION
+            # -------------------------------------
+
             location = Location.objects.filter(
                 name__iexact=new_location_name,
                 city__iexact=new_location_city
             ).first()
+
+            # -------------------------------------
+            # CREATE NEW LOCATION
+            # -------------------------------------
 
             if location is None:
 
@@ -234,13 +431,17 @@ def share_tip(request):
 
         else:
 
-            # Existing location selected
+            # -------------------------------------
+            # EXISTING LOCATION
+            # -------------------------------------
 
             if not location_id:
+
                 messages.error(
                     request,
                     'Please select a location.'
                 )
+
                 return redirect('share_tip')
 
             location = get_object_or_404(
@@ -248,9 +449,9 @@ def share_tip(request):
                 pk=location_id
             )
 
-        # ---------------------------------
+        # -----------------------------------------
         # CREATE KNOWLEDGE
-        # ---------------------------------
+        # -----------------------------------------
 
         Knowledge.objects.create(
             title=title,
@@ -268,9 +469,9 @@ def share_tip(request):
 
         return redirect('home')
 
-    # ---------------------------------
+    # =====================================================
     # GET REQUEST
-    # ---------------------------------
+    # =====================================================
 
     locations = Location.objects.all().order_by(
         'city',
