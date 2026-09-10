@@ -1,86 +1,142 @@
-from django.urls import path
 from django.contrib.auth import views as auth_views
+from django.urls import path, reverse_lazy
+
 from . import views
 
 
 urlpatterns = [
 
+    # =====================================================
     # HOME
+    # =====================================================
+
     path(
-        '',
+        "",
         views.home,
-        name='home'
+        name="home"
     ),
 
-    # KNOWLEDGE DETAIL
-    path(
-        'knowledge/<int:pk>/',
-        views.knowledge_detail,
-        name='knowledge_detail'
-    ),
-
+    # =====================================================
     # REGISTER
+    # =====================================================
+
     path(
-        'register/',
+        "register/",
         views.register,
-        name='register'
+        name="register"
     ),
 
+    # =====================================================
     # LOGIN
+    # =====================================================
+
     path(
-        'login/',
+        "login/",
         views.user_login,
-        name='login'
+        name="login"
     ),
 
+    # =====================================================
     # LOGOUT
+    # =====================================================
+
     path(
-        'logout/',
+        "logout/",
         views.user_logout,
-        name='logout'
+        name="logout"
     ),
 
+    # =====================================================
+    # KNOWLEDGE DETAIL
+    # =====================================================
+
+    path(
+        "knowledge/<int:pk>/",
+        views.knowledge_detail,
+        name="knowledge_detail"
+    ),
+
+    # =====================================================
     # SHARE TIP
+    # =====================================================
+
     path(
-        'share-tip/',
+        "share-tip/",
         views.share_tip,
-        name='share_tip'
+        name="share_tip"
     ),
 
-    # PASSWORD RESET - STEP 1
+    # =====================================================
+    # PASSWORD RESET - ENTER EMAIL
+    # =====================================================
+
     path(
-        'forgot-password/',
+        "forgot-password/",
         auth_views.PasswordResetView.as_view(
-            template_name='knowledge/forgot_password.html'
+            template_name="knowledge/forgot_password.html",
+
+            email_template_name=(
+                "knowledge/password_reset_email.txt"
+            ),
+
+            html_email_template_name=(
+                "knowledge/password_reset_email.html"
+            ),
+
+            subject_template_name=(
+                "knowledge/password_reset_subject.txt"
+            ),
+
+            success_url=reverse_lazy(
+                "password_reset_done"
+            ),
         ),
-        name='password_reset'
+        name="password_reset"
     ),
 
-    # PASSWORD RESET - STEP 2
+    # =====================================================
+    # PASSWORD RESET - EMAIL SENT
+    # =====================================================
+
     path(
-        'forgot-password/done/',
+        "forgot-password/done/",
         auth_views.PasswordResetDoneView.as_view(
-            template_name='knowledge/password_reset_done.html'
+            template_name=(
+                "knowledge/password_reset_done.html"
+            )
         ),
-        name='password_reset_done'
+        name="password_reset_done"
     ),
 
-    # PASSWORD RESET - STEP 3
+    # =====================================================
+    # PASSWORD RESET - NEW PASSWORD
+    # =====================================================
+
     path(
-        'reset-password/<uidb64>/<token>/',
+        "reset-password/<uidb64>/<token>/",
         auth_views.PasswordResetConfirmView.as_view(
-            template_name='knowledge/password_reset_confirm.html'
+            template_name=(
+                "knowledge/password_reset_confirm.html"
+            ),
+
+            success_url=reverse_lazy(
+                "password_reset_complete"
+            ),
         ),
-        name='password_reset_confirm'
+        name="password_reset_confirm"
     ),
 
-    # PASSWORD RESET - STEP 4
+    # =====================================================
+    # PASSWORD RESET - COMPLETE
+    # =====================================================
+
     path(
-        'reset-password/done/',
+        "reset-password/done/",
         auth_views.PasswordResetCompleteView.as_view(
-            template_name='knowledge/password_reset_complete.html'
+            template_name=(
+                "knowledge/password_reset_complete.html"
+            )
         ),
-        name='password_reset_complete'
+        name="password_reset_complete"
     ),
-
 ]

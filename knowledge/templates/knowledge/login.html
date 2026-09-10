@@ -1,371 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
+{% block title %}
+Login | Things Nobody Told Me
+{% endblock %}
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Login - Things Nobody Told Me</title>
+{% block content %}
 
-    <style>
+<div class="auth-container">
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+    <div class="auth-card">
 
-        body {
-            font-family: Arial, sans-serif;
-            background: #f5f7fb;
+        <h1>Welcome Back</h1>
 
-            min-height: 100vh;
+        <p class="auth-subtitle">
+            Login to continue to Things Nobody Told Me.
+        </p>
 
-            display: flex;
-            justify-content: center;
-            align-items: center;
 
-            padding: 20px;
-        }
-
-        /* ================= LOGIN CONTAINER ================= */
-
-        .login-container {
-
-            width: 100%;
-            max-width: 420px;
-
-            background: white;
-
-            padding: 40px;
-
-            border-radius: 14px;
-
-            box-shadow:
-                0 8px 25px rgba(0, 0, 0, 0.08);
-        }
-
-        /* ================= HEADING ================= */
-
-        h1 {
-
-            text-align: center;
-
-            margin-bottom: 30px;
-
-            color: #222;
-
-            font-size: 32px;
-        }
-
-        /* ================= MESSAGE ================= */
-
-        .message {
-
-            background: #ffe5e5;
-
-            color: #b00020;
-
-            padding: 12px;
-
-            border-radius: 7px;
-
-            margin-bottom: 18px;
-
-            text-align: center;
-
-            font-size: 15px;
-        }
-
-        /* ================= FORM ================= */
-
-        .form-group {
-
-            margin-bottom: 20px;
-        }
-
-        label {
-
-            display: block;
-
-            margin-bottom: 8px;
-
-            color: #444;
-
-            font-weight: 600;
-
-            font-size: 16px;
-        }
-
-        input {
-
-            width: 100%;
-
-            padding: 14px 15px;
-
-            border: 1px solid #ddd;
-
-            border-radius: 8px;
-
-            font-size: 16px;
-
-            outline: none;
-
-            min-height: 48px;
-        }
-
-        input:focus {
-
-            border-color: #555;
-
-            box-shadow:
-                0 0 0 2px rgba(0, 0, 0, 0.05);
-        }
-
-        /* ================= FORGOT PASSWORD ================= */
-
-        .forgot-password {
-
-            text-align: right;
-
-            margin-top: -10px;
-
-            margin-bottom: 22px;
-        }
-
-        .forgot-password a {
-
-            color: #555;
-
-            text-decoration: none;
-
-            font-size: 14px;
-
-            font-weight: 600;
-        }
-
-        .forgot-password a:hover {
-
-            color: #111;
-
-            text-decoration: underline;
-        }
-
-        /* ================= LOGIN BUTTON ================= */
-
-        button {
-
-            width: 100%;
-
-            min-height: 50px;
-
-            padding: 14px;
-
-            border: none;
-
-            border-radius: 8px;
-
-            background: #222;
-
-            color: white;
-
-            font-size: 17px;
-
-            font-weight: 600;
-
-            cursor: pointer;
-        }
-
-        button:hover {
-
-            background: #444;
-        }
-
-        /* ================= BOTTOM TEXT ================= */
-
-        .bottom-text {
-
-            text-align: center;
-
-            margin-top: 22px;
-
-            color: #666;
-
-            font-size: 15px;
-
-            line-height: 1.5;
-        }
-
-        .bottom-text a {
-
-            color: #222;
-
-            font-weight: bold;
-
-            text-decoration: none;
-
-            font-size: 16px;
-        }
-
-        .bottom-text a:hover {
-
-            text-decoration: underline;
-        }
-
-        /* ================= TABLET ================= */
-
-        @media (max-width: 600px) {
-
-            body {
-
-                padding: 18px;
-            }
-
-            .login-container {
-
-                max-width: 100%;
-
-                padding: 32px 25px;
-
-                border-radius: 12px;
-            }
-
-            h1 {
-
-                font-size: 30px;
-
-                margin-bottom: 26px;
-            }
-
-            label {
-
-                font-size: 16px;
-            }
-
-            input {
-
-                font-size: 16px;
-
-                min-height: 50px;
-
-                padding: 14px;
-            }
-
-            button {
-
-                min-height: 50px;
-
-                font-size: 17px;
-            }
-
-            .forgot-password {
-
-                margin-top: -8px;
-
-                margin-bottom: 20px;
-            }
-
-            .bottom-text {
-
-                font-size: 15px;
-            }
-
-            .bottom-text a {
-
-                font-size: 16px;
-            }
-
-        }
-
-        /* ================= SMALL MOBILE ================= */
-
-        @media (max-width: 400px) {
-
-            body {
-
-                padding: 15px;
-            }
-
-            .login-container {
-
-                padding: 28px 20px;
-            }
-
-            h1 {
-
-                font-size: 28px;
-
-                margin-bottom: 24px;
-            }
-
-            .form-group {
-
-                margin-bottom: 18px;
-            }
-
-            label {
-
-                font-size: 15px;
-            }
-
-            input {
-
-                min-height: 48px;
-
-                font-size: 16px;
-
-                padding: 13px;
-            }
-
-            button {
-
-                min-height: 50px;
-
-                font-size: 17px;
-            }
-
-            .forgot-password a {
-
-                font-size: 14px;
-            }
-
-            .bottom-text {
-
-                font-size: 14px;
-            }
-
-            .bottom-text a {
-
-                font-size: 15px;
-            }
-
-        }
-
-    </style>
-
-</head>
-
-
-<body>
-
-
-    <div class="login-container">
-
-
-        <h1>
-            Login
-        </h1>
-
+        <!-- ================================================= -->
+        <!-- MESSAGES -->
+        <!-- ================================================= -->
 
         {% if messages %}
 
             {% for message in messages %}
 
-                <div class="message">
-
+                <div class="message {{ message.tags }}">
                     {{ message }}
-
                 </div>
 
             {% endfor %}
@@ -373,39 +35,46 @@
         {% endif %}
 
 
+        <!-- ================================================= -->
+        <!-- LOGIN FORM -->
+        <!-- ================================================= -->
+
         <form method="POST">
 
             {% csrf_token %}
 
 
-            <!-- USERNAME -->
+            <!-- Username / Email -->
 
             <div class="form-group">
 
-                <label>
-                    Username
+                <label for="username">
+                    Username or Email
                 </label>
 
                 <input
                     type="text"
+                    id="username"
                     name="username"
-                    placeholder="Enter your username"
+                    placeholder="Enter username or email"
+                    value="{{ request.POST.username }}"
                     required
                 >
 
             </div>
 
 
-            <!-- PASSWORD -->
+            <!-- Password -->
 
             <div class="form-group">
 
-                <label>
+                <label for="password">
                     Password
                 </label>
 
                 <input
                     type="password"
+                    id="password"
                     name="password"
                     placeholder="Enter your password"
                     required
@@ -414,7 +83,7 @@
             </div>
 
 
-            <!-- FORGOT PASSWORD -->
+            <!-- Forgot Password -->
 
             <div class="forgot-password">
 
@@ -425,33 +94,32 @@
             </div>
 
 
-            <!-- LOGIN BUTTON -->
+            <!-- Login -->
 
-            <button type="submit">
-
+            <button
+                type="submit"
+                class="auth-button"
+            >
                 Login
-
             </button>
 
         </form>
 
 
-        <!-- REGISTER -->
+        <!-- Register -->
 
-        <p class="bottom-text">
+        <p class="auth-footer">
 
             Don't have an account?
 
             <a href="{% url 'register' %}">
-                Register
+                Create Account
             </a>
 
         </p>
 
-
     </div>
 
+</div>
 
-</body>
-
-</html>
+{% endblock %}

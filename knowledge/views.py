@@ -1,10 +1,11 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.models import User
-from django.contrib.auth import login, logout
 from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.db.models import Q
+from django.shortcuts import get_object_or_404, redirect, render
 
-from .models import Knowledge, Location, Category
+from .models import Category, Knowledge, Location
 
 
 # =========================================================
@@ -13,27 +14,33 @@ from .models import Knowledge, Location, Category
 
 def home(request):
 
-    search_query = request.GET.get('search', '').strip()
+    search_query = request.GET.get("q", "").strip()
 
-    knowledge_list = Knowledge.objects.filter(
-        status='approved'
-    ).order_by('-created_at')
+    knowledge_items = Knowledge.objects.filter(
+        status="approved"
+    ).select_related(
+        "category",
+        "location",
+        "author"
+    )
 
     if search_query:
-        knowledge_list = (
-            knowledge_list.filter(title__icontains=search_query)
-            | knowledge_list.filter(description__icontains=search_query)
-            | knowledge_list.filter(category__name__icontains=search_query)
-            | knowledge_list.filter(location__name__icontains=search_query)
-            | knowledge_list.filter(location__city__icontains=search_query)
-        ).distinct()
+        knowledge_items = knowledge_items.filter(
+            Q(title__icontains=search_query)
+            | Q(description__icontains=search_query)
+            | Q(category__name__icontains=search_query)
+            | Q(location__name__icontains=search_query)
+            | Q(location__city__icontains=search_query)
+        )
+
+    knowledge_items = knowledge_items.order_by("-created_at")
 
     return render(
         request,
-        'knowledge/home.html',
+        "knowledge/home.html",
         {
-            'knowledge_list': knowledge_list,
-            'search_query': search_query
+            "knowledge_items": knowledge_items,
+            "search_query": search_query,
         }
     )
 
@@ -45,16 +52,20 @@ def home(request):
 def knowledge_detail(request, pk):
 
     knowledge = get_object_or_404(
-        Knowledge,
+        Knowledge.objects.select_related(
+            "category",
+            "location",
+            "author"
+        ),
         pk=pk,
-        status='approved'
+        status="approved"
     )
 
     return render(
         request,
-        'knowledge/detail.html',
+        "knowledge/detail.html",
         {
-            'knowledge': knowledge
+            "knowledge": knowledge
         }
     )
 
@@ -65,44 +76,84 @@ def knowledge_detail(request, pk):
 
 def register(request):
 
-    if request.method == 'POST':
+    if request.user.is_authenticated:
+        return redirect("home")
 
-        username = request.POST.get(
-            'username',
-            ''
-        ).strip()
+    if request.method == "POST":
 
-        email = request.POST.get(
-            'email',
-            ''
-        ).strip().lower()
+        username = request.POST.get("username", "").strip()
 
-        password = request.POST.get(
-            'password',
-            ''
-        )
+        email = request.POST.get("email", "").strip().lower()
+
+        password = request.POST.get("password", "")
 
         confirm_password = request.POST.get(
-            'confirm_password',
-            ''
+            "confirm_password",
+            ""
         )
 
-        # -----------------------------------------
-        # BASIC VALIDATION
-        # -----------------------------------------
+        # -------------------------
+        # VALIDATION
+        # -------------------------
 
-        if not username or not email or not password or not confirm_password:
-
+        if not username:
             messages.error(
                 request,
-                'Please fill in all fields.'
+                "Username is required."
             )
 
-            return redirect('register')
+            return render(
+                request,
+                "knowledge/register.html"
+            )
 
-        # -----------------------------------------
-        # USERNAME VALIDATION
-        # -----------------------------------------
+        if not email:
+            messages.error(
+                request,
+                "Email is required."
+            )
+
+            return render(
+                request,
+                "knowledge/register.html"
+            )
+
+        if not password:
+            messages.error(
+                request,
+                "Password is required."
+            )
+
+            return render(
+                request,
+                "knowledge/register.html"
+            )
+
+        if len(password) < 8:
+            messages.error(
+                request,
+                "Password must contain at least 8 characters."
+            )
+
+            return render(
+                request,
+                "knowledge/register.html"
+            )
+
+        if password != confirm_password:
+            messages.error(
+                request,
+                "Passwords do not match."
+            )
+
+            return render(
+                request,
+                "knowledge/register.html"
+            )
+
+        # -------------------------
+        # CHECK USERNAME
+        # -------------------------
 
         if User.objects.filter(
             username__iexact=username
@@ -110,14 +161,17 @@ def register(request):
 
             messages.error(
                 request,
-                'Username already exists. Please choose another username.'
+                "Username already exists."
             )
 
-            return redirect('register')
+            return render(
+                request,
+                "knowledge/register.html"
+            )
 
-        # -----------------------------------------
-        # EMAIL VALIDATION
-        # -----------------------------------------
+        # -------------------------
+        # CHECK EMAIL
+        # -------------------------
 
         if User.objects.filter(
             email__iexact=email
@@ -125,36 +179,17 @@ def register(request):
 
             messages.error(
                 request,
-                'An account with this email already exists.'
+                "An account with this email already exists."
             )
 
-            return redirect('register')
-
-        # -----------------------------------------
-        # PASSWORD VALIDATION
-        # -----------------------------------------
-
-        if len(password) < 8:
-
-            messages.error(
+            return render(
                 request,
-                'Password must contain at least 8 characters.'
+                "knowledge/register.html"
             )
 
-            return redirect('register')
-
-        if password != confirm_password:
-
-            messages.error(
-                request,
-                'Passwords do not match.'
-            )
-
-            return redirect('register')
-
-        # -----------------------------------------
+        # -------------------------
         # CREATE USER
-        # -----------------------------------------
+        # -------------------------
 
         user = User.objects.create_user(
             username=username,
@@ -163,33 +198,29 @@ def register(request):
         )
 
         user.is_active = True
+
         user.save()
 
-        # -----------------------------------------
-        # AUTOMATIC LOGIN AFTER REGISTRATION
-        # -----------------------------------------
-
-        user.backend = 'django.contrib.auth.backends.ModelBackend'
+        # -------------------------
+        # LOGIN AFTER REGISTER
+        # -------------------------
 
         login(
             request,
-            user
+            user,
+            backend="django.contrib.auth.backends.ModelBackend"
         )
 
         messages.success(
             request,
-            f'Registration successful! Welcome, {user.username}.'
+            "Account created successfully!"
         )
 
-        return redirect('home')
-
-    # -----------------------------------------
-    # GET REQUEST
-    # -----------------------------------------
+        return redirect("home")
 
     return render(
         request,
-        'knowledge/register.html'
+        "knowledge/register.html"
     )
 
 
@@ -199,269 +230,89 @@ def register(request):
 
 def user_login(request):
 
-    if request.method == 'POST':
+    if request.user.is_authenticated:
+        return redirect("home")
+
+    if request.method == "POST":
 
         login_input = request.POST.get(
-            'username',
-            ''
+            "username",
+            ""
         ).strip()
 
         password = request.POST.get(
-            'password',
-            ''
+            "password",
+            ""
         )
 
-        # -----------------------------------------
-        # BASIC VALIDATION
-        # -----------------------------------------
+        user = None
 
-        if not login_input or not password:
+        # -------------------------------------------------
+        # LOGIN USING USERNAME
+        # -------------------------------------------------
 
-            messages.error(
-                request,
-                'Please enter your username/email and password.'
-            )
-
-            return redirect('login')
-
-        # -----------------------------------------
-        # FIND USER BY USERNAME
-        # -----------------------------------------
-
-        user = User.objects.filter(
+        username_user = User.objects.filter(
             username__iexact=login_input
         ).first()
 
-        # -----------------------------------------
-        # IF NOT FOUND, FIND BY EMAIL
-        # -----------------------------------------
+        if username_user:
 
-        if user is None:
+            user = authenticate(
+                request,
+                username=username_user.username,
+                password=password
+            )
 
-            user = User.objects.filter(
+        # -------------------------------------------------
+        # LOGIN USING EMAIL
+        # -------------------------------------------------
+
+        else:
+
+            email_user = User.objects.filter(
                 email__iexact=login_input
             ).first()
 
-        # -----------------------------------------
-        # USER NOT FOUND
-        # -----------------------------------------
+            if email_user:
 
-        if user is None:
-
-            messages.error(
-                request,
-                'Invalid username/email or password.'
-            )
-
-            return redirect('login')
-
-        # -----------------------------------------
-        # CHECK ACCOUNT STATUS
-        # -----------------------------------------
-
-        if not user.is_active:
-
-            messages.error(
-                request,
-                'This account is inactive. Please contact the administrator.'
-            )
-
-            return redirect('login')
-
-        # -----------------------------------------
-        # CHECK PASSWORD
-        # -----------------------------------------
-
-        if not user.check_password(password):
-
-            messages.error(
-                request,
-                'Invalid username/email or password.'
-            )
-
-            return redirect('login')
-
-        # -----------------------------------------
-        # LOGIN USER
-        # -----------------------------------------
-
-        user.backend = 'django.contrib.auth.backends.ModelBackend'
-
-        login(
-            request,
-            user
-        )
-
-        messages.success(
-            request,
-            f'Welcome back, {user.username}!'
-        )
-
-        return redirect('home')
-
-    # -----------------------------------------
-    # GET REQUEST
-    # -----------------------------------------
-
-    return render(
-        request,
-        'knowledge/login.html'
-    )
-
-
-# =========================================================
-# FORGOT PASSWORD / RESET PASSWORD
-# =========================================================
-
-def forgot_password(request):
-
-    if request.method == 'POST':
-
-        action = request.POST.get(
-            'action',
-            'check_email'
-        )
-
-        # -----------------------------------------
-        # CHECK EMAIL
-        # -----------------------------------------
-
-        if action == 'check_email':
-
-            email = request.POST.get(
-                'email',
-                ''
-            ).strip().lower()
-
-            if not email:
-
-                messages.error(
+                user = authenticate(
                     request,
-                    'Please enter your email address.'
+                    username=email_user.username,
+                    password=password
                 )
 
-                return redirect('forgot_password')
+        # -------------------------------------------------
+        # SUCCESS
+        # -------------------------------------------------
 
-            user = User.objects.filter(
-                email__iexact=email
-            ).first()
+        if user is not None and user.is_active:
 
-            if user is None:
-
-                messages.error(
-                    request,
-                    'No account found with this email address.'
-                )
-
-                return redirect('forgot_password')
-
-            return render(
-                request,
-                'knowledge/forgot_password.html',
-                {
-                    'reset_user': user,
-                    'email_verified': True
-                }
-            )
-
-        # -----------------------------------------
-        # RESET PASSWORD
-        # -----------------------------------------
-
-        elif action == 'reset_password':
-
-            user_id = request.POST.get(
-                'user_id'
-            )
-
-            new_password = request.POST.get(
-                'new_password',
-                ''
-            )
-
-            confirm_password = request.POST.get(
-                'confirm_password',
-                ''
-            )
-
-            user = get_object_or_404(
-                User,
-                pk=user_id
-            )
-
-            # -------------------------------------
-            # PASSWORD VALIDATION
-            # -------------------------------------
-
-            if not new_password:
-
-                messages.error(
-                    request,
-                    'Please enter a new password.'
-                )
-
-                return render(
-                    request,
-                    'knowledge/forgot_password.html',
-                    {
-                        'reset_user': user,
-                        'email_verified': True
-                    }
-                )
-
-            if len(new_password) < 8:
-
-                messages.error(
-                    request,
-                    'Password must contain at least 8 characters.'
-                )
-
-                return render(
-                    request,
-                    'knowledge/forgot_password.html',
-                    {
-                        'reset_user': user,
-                        'email_verified': True
-                    }
-                )
-
-            if new_password != confirm_password:
-
-                messages.error(
-                    request,
-                    'Passwords do not match.'
-                )
-
-                return render(
-                    request,
-                    'knowledge/forgot_password.html',
-                    {
-                        'reset_user': user,
-                        'email_verified': True
-                    }
-                )
-
-            # -------------------------------------
-            # UPDATE PASSWORD
-            # -------------------------------------
-
-            user.set_password(new_password)
-            user.save()
+            login(request, user)
 
             messages.success(
                 request,
-                'Password reset successfully. Please login with your new password.'
+                f"Welcome back, {user.username}!"
             )
 
-            return redirect('login')
+            next_url = request.GET.get("next")
 
-    # -----------------------------------------
-    # GET REQUEST
-    # -----------------------------------------
+            if next_url:
+                return redirect(next_url)
+
+            return redirect("home")
+
+        # -------------------------------------------------
+        # FAILURE
+        # -------------------------------------------------
+
+        messages.error(
+            request,
+            "Invalid username/email or password."
+        )
 
     return render(
         request,
-        'knowledge/forgot_password.html'
+        "knowledge/login.html"
     )
 
 
@@ -469,182 +320,147 @@ def forgot_password(request):
 # LOGOUT
 # =========================================================
 
+@login_required(login_url="login")
 def user_logout(request):
 
     logout(request)
 
     messages.success(
         request,
-        'You have been logged out successfully.'
+        "You have been logged out successfully."
     )
 
-    return redirect('home')
+    return redirect("home")
 
 
 # =========================================================
 # SHARE TIP
 # =========================================================
 
-@login_required
+@login_required(login_url="login")
 def share_tip(request):
 
-    if request.method == 'POST':
+    categories = Category.objects.all().order_by("name")
 
-        # -----------------------------------------
-        # GET FORM DATA
-        # -----------------------------------------
+    if request.method == "POST":
 
         title = request.POST.get(
-            'title',
-            ''
+            "title",
+            ""
         ).strip()
 
         description = request.POST.get(
-            'description',
-            ''
+            "description",
+            ""
         ).strip()
 
         category_id = request.POST.get(
-            'category',
-            ''
+            "category",
+            ""
+        )
+
+        location_name = request.POST.get(
+            "location_name",
+            ""
         ).strip()
 
-        location_id = request.POST.get(
-            'location',
-            ''
+        city = request.POST.get(
+            "city",
+            ""
         ).strip()
 
-        # -----------------------------------------
-        # NEW LOCATION DATA
-        # -----------------------------------------
-
-        new_location_name = request.POST.get(
-            'new_location_name',
-            ''
+        location_type = request.POST.get(
+            "location_type",
+            "General"
         ).strip()
 
-        new_location_city = request.POST.get(
-            'new_location_city',
-            ''
-        ).strip()
-
-        new_location_type = request.POST.get(
-            'new_location_type',
-            ''
-        ).strip()
-
-        # -----------------------------------------
-        # BASIC VALIDATION
-        # -----------------------------------------
+        # -------------------------------------------------
+        # VALIDATION
+        # -------------------------------------------------
 
         if not title:
-
             messages.error(
                 request,
-                'Please enter a title.'
+                "Title is required."
             )
 
-            return redirect('share_tip')
+            return render(
+                request,
+                "knowledge/share_tip.html",
+                {
+                    "categories": categories
+                }
+            )
 
         if not description:
-
             messages.error(
                 request,
-                'Please enter a description.'
+                "Description is required."
             )
 
-            return redirect('share_tip')
+            return render(
+                request,
+                "knowledge/share_tip.html",
+                {
+                    "categories": categories
+                }
+            )
 
         if not category_id:
-
             messages.error(
                 request,
-                'Please select a category.'
+                "Please select a category."
             )
 
-            return redirect('share_tip')
+            return render(
+                request,
+                "knowledge/share_tip.html",
+                {
+                    "categories": categories
+                }
+            )
 
-        # -----------------------------------------
+        # -------------------------------------------------
         # CATEGORY
-        # -----------------------------------------
+        # -------------------------------------------------
 
         category = get_object_or_404(
             Category,
-            pk=category_id
+            id=category_id
         )
 
-        # -----------------------------------------
+        # -------------------------------------------------
         # LOCATION
-        # -----------------------------------------
+        # -------------------------------------------------
 
-        if location_id == 'new':
+        if location_name and city:
 
-            if not new_location_name:
-
-                messages.error(
-                    request,
-                    'Please enter the new location name.'
-                )
-
-                return redirect('share_tip')
-
-            if not new_location_city:
-
-                messages.error(
-                    request,
-                    'Please enter the city.'
-                )
-
-                return redirect('share_tip')
-
-            if not new_location_type:
-
-                new_location_type = 'Other'
-
-            # -------------------------------------
-            # CHECK EXISTING LOCATION
-            # -------------------------------------
-
-            location = Location.objects.filter(
-                name__iexact=new_location_name,
-                city__iexact=new_location_city
-            ).first()
-
-            # -------------------------------------
-            # CREATE NEW LOCATION
-            # -------------------------------------
-
-            if location is None:
-
-                location = Location.objects.create(
-                    name=new_location_name,
-                    city=new_location_city,
-                    location_type=new_location_type
-                )
+            location, created = Location.objects.get_or_create(
+                name=location_name,
+                city=city,
+                defaults={
+                    "location_type": location_type
+                }
+            )
 
         else:
 
-            # -------------------------------------
-            # EXISTING LOCATION
-            # -------------------------------------
-
-            if not location_id:
-
-                messages.error(
-                    request,
-                    'Please select a location.'
-                )
-
-                return redirect('share_tip')
-
-            location = get_object_or_404(
-                Location,
-                pk=location_id
+            messages.error(
+                request,
+                "Location name and city are required."
             )
 
-        # -----------------------------------------
+            return render(
+                request,
+                "knowledge/share_tip.html",
+                {
+                    "categories": categories
+                }
+            )
+
+        # -------------------------------------------------
         # CREATE KNOWLEDGE
-        # -----------------------------------------
+        # -------------------------------------------------
 
         Knowledge.objects.create(
             title=title,
@@ -652,34 +468,20 @@ def share_tip(request):
             location=location,
             category=category,
             author=request.user,
-            status='pending'
+            status="pending"
         )
 
         messages.success(
             request,
-            'Your tip has been submitted for review.'
+            "Your tip has been submitted for approval."
         )
 
-        return redirect('home')
-
-    # -----------------------------------------
-    # GET REQUEST
-    # -----------------------------------------
-
-    locations = Location.objects.all().order_by(
-        'city',
-        'name'
-    )
-
-    categories = Category.objects.all().order_by(
-        'name'
-    )
+        return redirect("home")
 
     return render(
         request,
-        'knowledge/share_tip.html',
+        "knowledge/share_tip.html",
         {
-            'locations': locations,
-            'categories': categories
+            "categories": categories
         }
     )

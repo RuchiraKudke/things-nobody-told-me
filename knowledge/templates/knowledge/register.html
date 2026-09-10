@@ -1,285 +1,32 @@
-```html
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
+{% block title %}
+Create Account | Things Nobody Told Me
+{% endblock %}
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Register - Things Nobody Told Me</title>
+{% block content %}
 
-    <style>
+<div class="auth-container">
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+    <div class="auth-card">
 
-        body {
-            font-family: Arial, sans-serif;
-            background: #f5f7fb;
-            min-height: 100vh;
+        <h1>Create Account</h1>
 
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        <p class="auth-subtitle">
+            Join Things Nobody Told Me and share useful knowledge.
+        </p>
 
-            padding: 20px;
-        }
 
-        .register-container {
-            width: 100%;
-            max-width: 420px;
-
-            background: white;
-
-            padding: 36px 32px;
-
-            border-radius: 14px;
-
-            box-shadow:
-                0 8px 25px rgba(0, 0, 0, 0.08);
-        }
-
-        h1 {
-            text-align: center;
-
-            margin-bottom: 28px;
-
-            color: #222;
-
-            font-size: 30px;
-
-            line-height: 1.2;
-        }
-
-        .message {
-            background: #ffe5e5;
-
-            color: #b00020;
-
-            padding: 12px;
-
-            border-radius: 7px;
-
-            margin-bottom: 18px;
-
-            text-align: center;
-
-            font-size: 14px;
-
-            line-height: 1.4;
-        }
-
-        .message.success {
-            background: #e8f5e9;
-            color: #2e7d32;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-
-            margin-bottom: 8px;
-
-            color: #444;
-
-            font-weight: 600;
-
-            font-size: 15px;
-        }
-
-        input {
-            width: 100%;
-
-            min-height: 52px;
-
-            padding: 13px 14px;
-
-            border: 1px solid #ddd;
-
-            border-radius: 8px;
-
-            font-size: 16px;
-
-            outline: none;
-
-            background: white;
-        }
-
-        input:focus {
-            border-color: #555;
-
-            box-shadow:
-                0 0 0 3px rgba(0, 0, 0, 0.06);
-        }
-
-        input::placeholder {
-            color: #999;
-            font-size: 15px;
-        }
-
-        button {
-            width: 100%;
-
-            min-height: 54px;
-
-            padding: 14px 16px;
-
-            border: none;
-
-            border-radius: 8px;
-
-            background: #222;
-
-            color: white;
-
-            font-size: 17px;
-
-            font-weight: 600;
-
-            cursor: pointer;
-
-            margin-top: 4px;
-
-            transition: background 0.2s ease,
-                        transform 0.1s ease;
-        }
-
-        button:hover {
-            background: #444;
-        }
-
-        button:active {
-            transform: scale(0.98);
-        }
-
-        .bottom-text {
-            text-align: center;
-
-            margin-top: 24px;
-
-            color: #666;
-
-            font-size: 15px;
-
-            line-height: 1.5;
-        }
-
-        .bottom-text a {
-            color: #222;
-
-            font-weight: bold;
-
-            text-decoration: none;
-
-            margin-left: 5px;
-
-            font-size: 15px;
-        }
-
-        .bottom-text a:hover {
-            text-decoration: underline;
-        }
-
-        @media (max-width: 600px) {
-
-            body {
-                padding: 16px;
-            }
-
-            .register-container {
-                max-width: 100%;
-                padding: 30px 24px;
-                border-radius: 12px;
-            }
-
-            h1 {
-                font-size: 28px;
-                margin-bottom: 25px;
-            }
-
-            .form-group {
-                margin-bottom: 18px;
-            }
-
-            input {
-                min-height: 52px;
-                font-size: 16px;
-            }
-
-            button {
-                min-height: 54px;
-                font-size: 17px;
-            }
-        }
-
-        @media (max-width: 400px) {
-
-            body {
-                padding: 12px;
-            }
-
-            .register-container {
-                padding: 26px 18px;
-                border-radius: 10px;
-            }
-
-            h1 {
-                font-size: 25px;
-                margin-bottom: 23px;
-            }
-
-            label {
-                font-size: 15px;
-            }
-
-            input {
-                min-height: 52px;
-                padding: 13px;
-                font-size: 16px;
-            }
-
-            input::placeholder {
-                font-size: 14px;
-            }
-
-            button {
-                min-height: 54px;
-                font-size: 17px;
-            }
-
-            .bottom-text {
-                font-size: 14px;
-            }
-
-            .bottom-text a {
-                font-size: 15px;
-            }
-        }
-
-    </style>
-
-</head>
-
-<body>
-
-    <div class="register-container">
-
-        <h1>
-            Create Your Account
-        </h1>
+        <!-- ================================================= -->
+        <!-- MESSAGES -->
+        <!-- ================================================= -->
 
         {% if messages %}
 
             {% for message in messages %}
 
-                <div class="message {% if message.tags %}{{ message.tags }}{% endif %}">
+                <div class="message {{ message.tags }}">
                     {{ message }}
                 </div>
 
@@ -287,9 +34,17 @@
 
         {% endif %}
 
+
+        <!-- ================================================= -->
+        <!-- REGISTER FORM -->
+        <!-- ================================================= -->
+
         <form method="POST">
 
             {% csrf_token %}
+
+
+            <!-- Username -->
 
             <div class="form-group">
 
@@ -301,17 +56,20 @@
                     type="text"
                     id="username"
                     name="username"
-                    placeholder="Enter your username"
-                    autocomplete="username"
+                    placeholder="Enter username"
+                    value="{{ request.POST.username }}"
                     required
                 >
 
             </div>
 
+
+            <!-- Email -->
+
             <div class="form-group">
 
                 <label for="email">
-                    Email
+                    Email Address
                 </label>
 
                 <input
@@ -319,11 +77,14 @@
                     id="email"
                     name="email"
                     placeholder="Enter your email"
-                    autocomplete="email"
+                    value="{{ request.POST.email }}"
                     required
                 >
 
             </div>
+
+
+            <!-- Password -->
 
             <div class="form-group">
 
@@ -335,13 +96,14 @@
                     type="password"
                     id="password"
                     name="password"
-                    placeholder="Enter your password"
-                    autocomplete="new-password"
-                    minlength="8"
+                    placeholder="Minimum 8 characters"
                     required
                 >
 
             </div>
+
+
+            <!-- Confirm Password -->
 
             <div class="form-group">
 
@@ -353,21 +115,28 @@
                     type="password"
                     id="confirm_password"
                     name="confirm_password"
-                    placeholder="Confirm your password"
-                    autocomplete="new-password"
-                    minlength="8"
+                    placeholder="Re-enter your password"
                     required
                 >
 
             </div>
 
-            <button type="submit">
+
+            <!-- Submit -->
+
+            <button
+                type="submit"
+                class="auth-button"
+            >
                 Create Account
             </button>
 
         </form>
 
-        <p class="bottom-text">
+
+        <!-- Login -->
+
+        <p class="auth-footer">
 
             Already have an account?
 
@@ -379,7 +148,6 @@
 
     </div>
 
-</body>
+</div>
 
-</html>
-```
+{% endblock %}
