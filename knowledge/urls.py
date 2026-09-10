@@ -26,6 +26,12 @@ urlpatterns = [
         name="knowledge_detail"
     ),
 
+    path(
+        "knowledge/<int:pk>/vote/",
+         views.vote_knowledge,
+         name="vote_knowledge"
+    ),
+
     # =====================================================
     # REGISTER
     # =====================================================

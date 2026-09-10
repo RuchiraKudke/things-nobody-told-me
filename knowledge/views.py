@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
-from .models import Knowledge, Location, Category
+from .models import Knowledge, Location, Category, Vote
 
 
 # =========================================================
@@ -69,9 +69,111 @@ def knowledge_detail(request, pk):
         "knowledge/detail.html",
         {
             "knowledge": knowledge,
+            "user_vote": user_vote,
         },
     )
 
+# =========================================================
+# KNOWLEDGE VOTE
+# =========================================================
+
+@login_required(login_url="login")
+def vote_knowledge(request, pk):
+
+    if request.method != "POST":
+        return redirect("knowledge_detail", pk=pk)
+
+    knowledge = get_object_or_404(
+        Knowledge,
+        pk=pk,
+        status="approved",
+    )
+
+    vote_type = request.POST.get("vote_type")
+
+    if vote_type not in ["agree", "disagree"]:
+        return redirect(
+            "knowledge_detail",
+            pk=pk
+        )
+
+    vote, created = Vote.objects.get_or_create(
+        user=request.user,
+        knowledge=knowledge,
+        defaults={
+            "vote_type": vote_type
+        }
+    )
+
+    # -------------------------------------------------
+    # NEW VOTE
+    # -------------------------------------------------
+
+    if created:
+
+        if vote_type == "agree":
+
+            knowledge.confirmations += 1
+
+        else:
+
+            knowledge.disagreements += 1
+
+    # -------------------------------------------------
+    # EXISTING VOTE
+    # -------------------------------------------------
+
+    else:
+
+        # Same vote clicked again → remove vote
+        if vote.vote_type == vote_type:
+
+            if vote_type == "agree":
+
+                knowledge.confirmations = max(
+                    0,
+                    knowledge.confirmations - 1
+                )
+
+            else:
+
+                knowledge.disagreements = max(
+                    0,
+                    knowledge.disagreements - 1
+                )
+
+            vote.delete()
+
+        # Change vote
+        else:
+
+            if vote.vote_type == "agree":
+
+                knowledge.confirmations = max(
+                    0,
+                    knowledge.confirmations - 1
+                )
+
+                knowledge.disagreements += 1
+
+            else:
+
+                knowledge.disagreements = max(
+                    0,
+                    knowledge.disagreements - 1
+                )
+
+                knowledge.confirmations += 1
+
+            vote.vote_type = vote_type
+            vote.save()
+
+    knowledge.save()
+
+    return redirect(
+        "knowledge_detail",
+        pk=pk
+    )
 
 # =========================================================
 # REGISTER
