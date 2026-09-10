@@ -1,11 +1,128 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-{% block title %}
-Create Account | Things Nobody Told Me
-{% endblock %}
+    <title>Register | Things Nobody Told Me</title>
 
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-{% block content %}
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f3ef;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 460px;
+        }
+
+        .auth-card {
+            background: white;
+            padding: 42px;
+            border-radius: 18px;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            text-align: center;
+            color: #222;
+            margin-bottom: 10px;
+            font-size: 30px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #777;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .messages {
+            margin-bottom: 20px;
+        }
+
+        .message {
+            padding: 12px 15px;
+            border-radius: 8px;
+            background: #f8d7da;
+            color: #842029;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid #d5d5d5;
+            border-radius: 9px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #555;
+        }
+
+        .register-btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 9px;
+            background: #222;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        .register-btn:hover {
+            background: #000;
+        }
+
+        .bottom-text {
+            text-align: center;
+            margin-top: 25px;
+            color: #777;
+            font-size: 14px;
+        }
+
+        .bottom-text a {
+            color: #222;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .bottom-text a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
 
 <div class="auth-container">
 
@@ -13,103 +130,62 @@ Create Account | Things Nobody Told Me
 
         <h1>Create Account</h1>
 
-        <p class="auth-subtitle">
+        <p class="subtitle">
             Join Things Nobody Told Me and share useful knowledge.
         </p>
 
-
-        <!-- ================================================= -->
-        <!-- MESSAGES -->
-        <!-- ================================================= -->
-
         {% if messages %}
-
-            {% for message in messages %}
-
-                <div class="message {{ message.tags }}">
-                    {{ message }}
-                </div>
-
-            {% endfor %}
-
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="message">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
         {% endif %}
-
-
-        <!-- ================================================= -->
-        <!-- REGISTER FORM -->
-        <!-- ================================================= -->
 
         <form method="POST">
 
             {% csrf_token %}
 
-
-            <!-- Username -->
-
             <div class="form-group">
-
-                <label for="username">
-                    Username
-                </label>
+                <label for="username">Username</label>
 
                 <input
                     type="text"
                     id="username"
                     name="username"
                     placeholder="Enter username"
-                    value="{{ request.POST.username }}"
                     required
                 >
-
             </div>
 
-
-            <!-- Email -->
-
             <div class="form-group">
-
-                <label for="email">
-                    Email Address
-                </label>
+                <label for="email">Email Address</label>
 
                 <input
                     type="email"
                     id="email"
                     name="email"
                     placeholder="Enter your email"
-                    value="{{ request.POST.email }}"
                     required
                 >
-
             </div>
 
-
-            <!-- Password -->
-
             <div class="form-group">
-
-                <label for="password">
-                    Password
-                </label>
+                <label for="password">Password</label>
 
                 <input
                     type="password"
                     id="password"
                     name="password"
-                    placeholder="Minimum 8 characters"
+                    placeholder="Create a password"
                     required
                 >
-
             </div>
 
-
-            <!-- Confirm Password -->
-
             <div class="form-group">
-
-                <label for="confirm_password">
-                    Confirm Password
-                </label>
+                <label for="confirm_password">Confirm Password</label>
 
                 <input
                     type="password"
@@ -118,36 +194,22 @@ Create Account | Things Nobody Told Me
                     placeholder="Re-enter your password"
                     required
                 >
-
             </div>
 
-
-            <!-- Submit -->
-
-            <button
-                type="submit"
-                class="auth-button"
-            >
+            <button type="submit" class="register-btn">
                 Create Account
             </button>
 
         </form>
 
-
-        <!-- Login -->
-
-        <p class="auth-footer">
-
+        <p class="bottom-text">
             Already have an account?
-
-            <a href="{% url 'login' %}">
-                Login
-            </a>
-
+            <a href="{% url 'login' %}">Login</a>
         </p>
 
     </div>
 
 </div>
 
-{% endblock %}
+</body>
+</html>
