@@ -14,56 +14,273 @@
             box-sizing: border-box;
         }
 
+        html,
+        body {
+            min-height: 100%;
+        }
+
         body {
             margin: 0;
+
+            font-family: Arial, Helvetica, sans-serif;
+
+            background: #f7f6f2;
+
+            color: #191919;
+        }
+
+
+        /* =========================
+           PAGE
+        ========================= */
+
+        .page {
             min-height: 100vh;
-            font-family: Arial, sans-serif;
-            background: #f5f3ef;
+
+            display: grid;
+
+            grid-template-columns: 0.9fr 1.1fr;
+        }
+
+
+        /* =========================
+           LEFT PANEL
+        ========================= */
+
+        .intro {
+            background: #1d1d1c;
+
+            color: #ffffff;
+
+            padding: 55px 12%;
 
             display: flex;
+
+            flex-direction: column;
+
             justify-content: center;
+
+            position: relative;
+
+            overflow: hidden;
+        }
+
+        .intro::before {
+            content: "";
+
+            position: absolute;
+
+            width: 420px;
+            height: 420px;
+
+            border: 1px solid rgba(255,255,255,0.07);
+
+            border-radius: 50%;
+
+            top: -170px;
+            left: -170px;
+        }
+
+        .intro::after {
+            content: "";
+
+            position: absolute;
+
+            width: 300px;
+            height: 300px;
+
+            border: 1px solid rgba(255,255,255,0.06);
+
+            border-radius: 50%;
+
+            right: -160px;
+            bottom: -130px;
+        }
+
+        .brand {
+            position: absolute;
+
+            top: 35px;
+            left: 12%;
+
+            font-size: 18px;
+
+            font-weight: 700;
+
+            letter-spacing: -0.3px;
+        }
+
+        .intro-content {
+            max-width: 430px;
+
+            position: relative;
+
+            z-index: 2;
+        }
+
+        .eyebrow {
+            display: block;
+
+            margin-bottom: 22px;
+
+            color: #999;
+
+            font-size: 11px;
+
+            font-weight: 700;
+
+            text-transform: uppercase;
+
+            letter-spacing: 1.8px;
+        }
+
+        .intro h1 {
+            margin: 0 0 18px;
+
+            font-size: clamp(38px, 4vw, 54px);
+
+            line-height: 1.05;
+
+            letter-spacing: -1.7px;
+        }
+
+        .intro p {
+            margin: 0;
+
+            max-width: 390px;
+
+            color: #c3c3c3;
+
+            font-size: 15px;
+
+            line-height: 1.75;
+        }
+
+        .small-note {
+            margin-top: 40px;
+
+            padding-top: 20px;
+
+            border-top: 1px solid #393938;
+
+            color: #8e8e8e;
+
+            font-size: 12px;
+
+            line-height: 1.6;
+        }
+
+
+        /* =========================
+           RIGHT SIDE
+        ========================= */
+
+        .auth-side {
+            min-height: 100vh;
+
+            display: flex;
+
             align-items: center;
 
-            padding: 30px;
+            justify-content: center;
+
+            padding: 40px;
         }
 
         .auth-container {
             width: 100%;
-            max-width: 450px;
+
+            max-width: 430px;
         }
+
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .auth-header {
+            margin-bottom: 28px;
+        }
+
+        .auth-header h2 {
+            margin: 0 0 8px;
+
+            font-size: 28px;
+
+            letter-spacing: -0.8px;
+        }
+
+        .auth-header p {
+            margin: 0;
+
+            color: #858585;
+
+            font-size: 13px;
+
+            line-height: 1.55;
+        }
+
+
+        /* =========================
+           CARD
+        ========================= */
 
         .auth-card {
-            background: white;
-            padding: 40px;
+            background: #ffffff;
 
-            border-radius: 18px;
+            border: 1px solid #e2dfd8;
 
-            box-shadow:
-                0 10px 35px rgba(0, 0, 0, 0.08);
+            border-radius: 10px;
+
+            padding: 32px;
         }
 
-        h1 {
-            margin: 0 0 10px;
 
-            text-align: center;
+        /* =========================
+           MESSAGES
+        ========================= */
 
-            font-size: 32px;
+        .message {
+            padding: 12px 14px;
 
-            color: #222;
-        }
+            margin-bottom: 20px;
 
-        .subtitle {
-            text-align: center;
+            border-radius: 6px;
 
-            color: #777;
+            border-left: 3px solid #222;
 
-            margin-bottom: 30px;
+            background: #f0eee9;
+
+            color: #444;
+
+            font-size: 13px;
 
             line-height: 1.5;
         }
 
+        .message.error {
+            background: #fff0f0;
+
+            border-left-color: #a00000;
+
+            color: #8a0000;
+        }
+
+        .message.success {
+            background: #eef8f0;
+
+            border-left-color: #27733a;
+
+            color: #226131;
+        }
+
+
+        /* =========================
+           FORM
+        ========================= */
+
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 21px;
         }
 
         label {
@@ -71,107 +288,261 @@
 
             margin-bottom: 8px;
 
-            font-weight: 600;
+            color: #292929;
 
-            color: #333;
+            font-size: 13px;
+
+            font-weight: 700;
         }
 
         input {
             width: 100%;
 
-            padding: 13px 15px;
+            padding: 13px 14px;
 
-            border: 1px solid #ddd;
+            border: 1px solid #d3d0ca;
 
-            border-radius: 10px;
+            border-radius: 6px;
 
-            font-size: 15px;
+            background: #ffffff;
+
+            color: #222;
+
+            font-family: Arial, Helvetica, sans-serif;
+
+            font-size: 14px;
 
             outline: none;
+
+            transition:
+                border-color 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        input::placeholder {
+            color: #aaa;
+        }
+
+        input:hover {
+            border-color: #b8b4ac;
         }
 
         input:focus {
-            border-color: #555;
+            border-color: #242424;
+
+            box-shadow: 0 0 0 3px rgba(20,20,20,0.06);
         }
 
+
+        /* =========================
+           FORGOT
+        ========================= */
+
         .forgot-password {
-            text-align: right;
+            display: flex;
+
+            justify-content: flex-end;
+
+            margin-top: -7px;
 
             margin-bottom: 22px;
         }
 
         .forgot-password a {
-            color: #555;
+            color: #666;
+
+            font-size: 12px;
+
+            font-weight: 600;
 
             text-decoration: none;
-
-            font-size: 14px;
         }
 
         .forgot-password a:hover {
+            color: #111;
+
             text-decoration: underline;
+
+            text-underline-offset: 3px;
         }
+
+
+        /* =========================
+           BUTTON
+        ========================= */
 
         .auth-button {
             width: 100%;
 
-            padding: 14px;
+            min-height: 48px;
+
+            padding: 13px 18px;
 
             border: none;
 
-            border-radius: 10px;
+            border-radius: 6px;
 
-            background: #222;
+            background: #191919;
 
-            color: white;
+            color: #ffffff;
 
-            font-size: 16px;
+            font-size: 14px;
 
-            font-weight: 600;
+            font-weight: 700;
 
             cursor: pointer;
+
+            transition:
+                background 0.2s ease,
+                transform 0.2s ease;
         }
 
         .auth-button:hover {
-            background: #444;
+            background: #383838;
+
+            transform: translateY(-1px);
         }
 
+        .auth-button:active {
+            transform: translateY(0);
+        }
+
+
+        /* =========================
+           FOOTER
+        ========================= */
+
         .auth-footer {
+            margin: 22px 0 0;
+
             text-align: center;
 
-            margin-top: 25px;
+            color: #777;
 
-            color: #666;
+            font-size: 13px;
         }
 
         .auth-footer a {
             color: #222;
 
-            font-weight: 600;
+            font-weight: 700;
 
             text-decoration: none;
         }
 
-        .message {
-            padding: 12px 15px;
+        .auth-footer a:hover {
+            text-decoration: underline;
 
-            border-radius: 8px;
-
-            margin-bottom: 20px;
-
-            font-size: 14px;
+            text-underline-offset: 3px;
         }
 
-        .message.error {
-            background: #ffe8e8;
+        .home-link {
+            display: block;
 
-            color: #a00000;
+            margin-top: 17px;
+
+            text-align: center;
+
+            color: #999;
+
+            font-size: 12px;
+
+            text-decoration: none;
         }
 
-        .message.success {
-            background: #e8f8ec;
+        .home-link:hover {
+            color: #222;
+        }
 
-            color: #176b2c;
+
+        /* =========================
+           TABLET
+        ========================= */
+
+        @media (max-width: 800px) {
+
+            .page {
+                grid-template-columns: 1fr;
+            }
+
+            .intro {
+                min-height: 310px;
+
+                padding: 90px 8% 45px;
+
+                justify-content: flex-end;
+            }
+
+            .brand {
+                top: 28px;
+                left: 8%;
+            }
+
+            .intro h1 {
+                font-size: 40px;
+            }
+
+            .intro p {
+                font-size: 14px;
+            }
+
+            .small-note {
+                display: none;
+            }
+
+            .auth-side {
+                min-height: auto;
+
+                padding: 45px 25px 60px;
+            }
+
+        }
+
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 520px) {
+
+            .intro {
+                min-height: 275px;
+
+                padding: 80px 7% 35px;
+            }
+
+            .brand {
+                left: 7%;
+
+                font-size: 17px;
+            }
+
+            .intro h1 {
+                font-size: 34px;
+
+                letter-spacing: -1px;
+            }
+
+            .intro p {
+                font-size: 13px;
+            }
+
+            .auth-side {
+                padding: 32px 18px 50px;
+            }
+
+            .auth-header h2 {
+                font-size: 24px;
+            }
+
+            .auth-card {
+                padding: 24px 20px;
+            }
+
+            input {
+                font-size: 16px;
+            }
+
         }
 
     </style>
@@ -181,104 +552,186 @@
 
 <body>
 
-<div class="auth-container">
 
-    <div class="auth-card">
-
-        <h1>Welcome Back</h1>
-
-        <p class="subtitle">
-            Login to continue to Things Nobody Told Me.
-        </p>
+<div class="page">
 
 
-        {% if messages %}
+    <!-- =========================
+         INTRO
+    ========================= -->
 
-            {% for message in messages %}
+    <section class="intro">
 
-                <div class="message {{ message.tags }}">
-                    {{ message }}
-                </div>
-
-            {% endfor %}
-
-        {% endif %}
+        <div class="brand">
+            Things Nobody Told Me
+        </div>
 
 
-        <form method="POST" action="{% url 'login' %}">
+        <div class="intro-content">
 
-            {% csrf_token %}
+            <span class="eyebrow">
+                Welcome back
+            </span>
+
+            <h1>
+                Some things are better shared.
+            </h1>
+
+            <p>
+                Sign in to explore useful experiences,
+                contribute your own knowledge, and help
+                someone learn something a little earlier.
+            </p>
 
 
-            <div class="form-group">
+            <div class="small-note">
+                A community built around the things we
+                usually discover only after experiencing them.
+            </div>
 
-                <label for="username">
-                    Username or Email
-                </label>
+        </div>
 
-                <input
-                    type="text"
-                    id="username"
-                    name="username"
-                    placeholder="Enter username or email"
-                    value="{{ request.POST.username|default:'' }}"
-                    autocomplete="username"
-                    required
-                >
+    </section>
+
+
+
+    <!-- =========================
+         LOGIN
+    ========================= -->
+
+    <section class="auth-side">
+
+        <div class="auth-container">
+
+
+            <div class="auth-header">
+
+                <h2>
+                    Welcome back
+                </h2>
+
+                <p>
+                    Login to continue to your account.
+                </p>
 
             </div>
 
 
-            <div class="form-group">
+            <div class="auth-card">
 
-                <label for="password">
-                    Password
-                </label>
 
-                <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    placeholder="Enter your password"
-                    autocomplete="current-password"
-                    required
+                {% if messages %}
+
+                    {% for message in messages %}
+
+                        <div class="message {{ message.tags }}">
+                            {{ message }}
+                        </div>
+
+                    {% endfor %}
+
+                {% endif %}
+
+
+
+                <form
+                    method="POST"
+                    action="{% url 'login' %}"
                 >
+
+                    {% csrf_token %}
+
+
+                    <div class="form-group">
+
+                        <label for="username">
+                            Username or Email
+                        </label>
+
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            placeholder="Enter username or email"
+                            value="{{ request.POST.username|default:'' }}"
+                            autocomplete="username"
+                            required
+                        >
+
+                    </div>
+
+
+
+                    <div class="form-group">
+
+                        <label for="password">
+                            Password
+                        </label>
+
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            required
+                        >
+
+                    </div>
+
+
+
+                    <div class="forgot-password">
+
+                        <a href="{% url 'password_reset' %}">
+                            Forgot password?
+                        </a>
+
+                    </div>
+
+
+
+                    <button
+                        type="submit"
+                        class="auth-button"
+                    >
+                        Login
+                    </button>
+
+
+                </form>
+
 
             </div>
 
 
-            <div class="forgot-password">
 
-                <a href="{% url 'password_reset' %}">
-                    Forgot Password?
+            <p class="auth-footer">
+
+                Don't have an account?
+
+                <a href="{% url 'register' %}">
+                    Create account
                 </a>
 
-            </div>
+            </p>
 
 
-            <button
-                type="submit"
-                class="auth-button"
+            <a
+                href="{% url 'home' %}"
+                class="home-link"
             >
-                Login
-            </button>
-
-        </form>
-
-
-        <p class="auth-footer">
-
-            Don't have an account?
-
-            <a href="{% url 'register' %}">
-                Create Account
+                ← Back to home
             </a>
 
-        </p>
 
-    </div>
+        </div>
+
+    </section>
+
 
 </div>
+
 
 </body>
 

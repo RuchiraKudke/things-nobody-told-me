@@ -14,482 +14,641 @@
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f5f5f5;
-            color: #111;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f7f6f2;
+            color: #171717;
+        }
+
+        a {
+            color: inherit;
         }
 
 
-        /* ================= NAVBAR ================= */
+        /* =========================
+           NAVBAR
+        ========================= */
 
         .navbar {
-            background: white;
-            padding: 18px 7%;
+            height: 74px;
+            padding: 0 6%;
+            background: rgba(255, 255, 255, 0.96);
 
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
 
-            gap: 20px;
+            border-bottom: 1px solid #e8e5df;
 
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+
+            backdrop-filter: blur(10px);
         }
-
 
         .logo {
-            font-size: 22px;
-            font-weight: bold;
-            color: #111;
             text-decoration: none;
-            white-space: nowrap;
+            font-size: 21px;
+            font-weight: 700;
+            letter-spacing: -0.4px;
+            color: #171717;
         }
-
 
         .nav-links {
             display: flex;
             align-items: center;
-            justify-content: flex-end;
-
-            gap: 20px;
-
-            flex-wrap: nowrap;
+            gap: 22px;
         }
-
 
         .nav-links a {
             text-decoration: none;
-            color: #333;
-            font-size: 15px;
-            white-space: nowrap;
+            font-size: 14px;
+            color: #555;
+            transition: 0.2s ease;
         }
-
 
         .nav-links a:hover {
-            color: #000;
+            color: #111;
         }
-
 
         .login-btn {
-            border: 1px solid #222;
+            border: 1px solid #d5d2cc;
             padding: 9px 16px;
-            border-radius: 7px;
+            border-radius: 6px;
+            background: #fff;
         }
-
 
         .register-btn {
-            background: #222;
-            color: white !important;
+            background: #181818;
+            color: #fff !important;
             padding: 10px 17px;
-            border-radius: 7px;
+            border-radius: 6px;
         }
-
 
         .register-btn:hover {
-            background: #444;
+            background: #333 !important;
         }
-
-
-        .welcome {
-            color: #555;
-            font-size: 15px;
-            white-space: nowrap;
-        }
-
-
-        .logout-btn {
-            background: #eee;
-            padding: 9px 15px;
-            border-radius: 7px;
-        }
-
-
-        .logout-btn:hover {
-            background: #ddd;
-        }
-
 
         .share-btn {
-            color: #222 !important;
             font-weight: 600;
+            color: #222 !important;
+        }
+
+        .welcome {
+            color: #777;
+            font-size: 14px;
+        }
+
+        .logout-btn {
+            padding: 9px 13px;
+            background: #f0efec;
+            border-radius: 6px;
         }
 
 
-        .share-btn:hover {
-            text-decoration: underline;
-        }
-
-
-
-        /* ================= HERO ================= */
+        /* =========================
+           HERO
+        ========================= */
 
         .hero {
-            background: #111;
+            background: #1c1c1b;
             color: white;
+
+            padding: 86px 20px 92px;
+
             text-align: center;
 
-            padding: 80px 20px;
+            position: relative;
+            overflow: hidden;
         }
 
+        .hero::before {
+            content: "";
+            position: absolute;
 
-        .hero h1 {
-            font-size: 48px;
-            margin: 0 0 15px;
+            width: 420px;
+            height: 420px;
+
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 50%;
+
+            top: -220px;
+            left: -130px;
         }
 
+        .hero::after {
+            content: "";
+            position: absolute;
 
-        .hero p {
-            font-size: 20px;
-            color: #ddd;
-            margin: 0;
+            width: 300px;
+            height: 300px;
+
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 50%;
+
+            bottom: -180px;
+            right: -80px;
         }
 
-
-
-        /* ================= SEARCH ================= */
-
-        .search-box {
-            margin-top: 30px;
-        }
-
-
-        .search-box form {
-            display: flex;
-            justify-content: center;
-
-            gap: 10px;
-
+        .hero-content {
+            position: relative;
+            z-index: 2;
             max-width: 850px;
             margin: auto;
         }
 
+        .eyebrow {
+            display: inline-block;
 
-        .search-box input {
-            width: 100%;
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
 
-            padding: 15px;
+            color: #aaa;
 
-            border: none;
-            border-radius: 8px;
+            margin-bottom: 22px;
+        }
 
-            font-size: 16px;
+        .hero h1 {
+            margin: 0 auto 20px;
 
-            outline: none;
+            max-width: 780px;
+
+            font-size: clamp(38px, 6vw, 64px);
+            line-height: 1.05;
+
+            letter-spacing: -2px;
+            font-weight: 700;
+        }
+
+        .hero p {
+            max-width: 620px;
+            margin: auto;
+
+            color: #c8c8c8;
+
+            font-size: 18px;
+            line-height: 1.6;
         }
 
 
-        .search-box button {
-            padding: 15px 25px;
+        /* =========================
+           SEARCH
+        ========================= */
+
+        .search-box {
+            max-width: 720px;
+            margin: 34px auto 0;
+        }
+
+        .search-box form {
+            display: flex;
+
+            background: white;
+
+            padding: 5px;
+
+            border-radius: 8px;
+
+            box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+        }
+
+        .search-box input {
+            flex: 1;
+
+            min-width: 0;
 
             border: none;
-            border-radius: 8px;
+            outline: none;
+
+            padding: 15px 16px;
+
+            font-size: 15px;
+
+            color: #222;
+            background: transparent;
+        }
+
+        .search-box input::placeholder {
+            color: #999;
+        }
+
+        .search-box button {
+            border: none;
+
+            background: #1b1b1b;
+            color: white;
+
+            padding: 0 25px;
+
+            border-radius: 6px;
+
+            font-size: 14px;
+            font-weight: 600;
 
             cursor: pointer;
 
-            font-size: 16px;
-
-            background: white;
-            color: #111;
-
-            white-space: nowrap;
+            transition: 0.2s ease;
         }
-
 
         .search-box button:hover {
-            background: #ddd;
+            background: #3a3a3a;
         }
 
 
-
-        /* ================= CONTENT ================= */
+        /* =========================
+           CONTENT
+        ========================= */
 
         .container {
-            width: 85%;
-            max-width: 1200px;
+            width: 88%;
+            max-width: 1180px;
 
-            margin: 40px auto;
+            margin: 0 auto;
+
+            padding: 65px 0 80px;
+        }
+
+        .section-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+
+            gap: 20px;
+
+            margin-bottom: 28px;
+        }
+
+        .section-heading h2 {
+            margin: 0;
+
+            font-size: 27px;
+            letter-spacing: -0.7px;
+        }
+
+        .section-heading p {
+            margin: 0;
+
+            color: #888;
+
+            font-size: 13px;
         }
 
 
-        .container h2 {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
+        /* =========================
+           CARDS
+        ========================= */
 
         .cards {
             display: grid;
 
             grid-template-columns: repeat(3, 1fr);
 
-            gap: 20px;
+            gap: 18px;
         }
 
-
         .card {
-            background: white;
+            background: #fff;
+
+            min-height: 260px;
 
             padding: 25px;
 
-            border-radius: 12px;
+            border: 1px solid #e7e4de;
+            border-radius: 10px;
 
-            box-shadow:
-                0 3px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
 
-            transition: transform 0.2s ease;
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease,
+                border-color 0.2s ease;
         }
-
 
         .card:hover {
             transform: translateY(-4px);
+
+            border-color: #d4d0c8;
+
+            box-shadow: 0 12px 28px rgba(0,0,0,0.07);
         }
 
+        .card-top {
+            display: flex;
 
-        .card h3 {
-            margin-top: 0;
-            line-height: 1.4;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 20px;
         }
-
-
-        .card h3 a {
-            color: #111;
-            text-decoration: none;
-        }
-
-
-        .card h3 a:hover {
-            text-decoration: underline;
-        }
-
-
-        .card p {
-            color: #555;
-            line-height: 1.5;
-        }
-
 
         .tag {
             display: inline-block;
 
-            background: #eee;
-
             padding: 6px 10px;
 
-            border-radius: 20px;
+            background: #f1efea;
 
-            font-size: 13px;
+            color: #555;
+
+            border-radius: 5px;
+
+            font-size: 11px;
+
+            font-weight: 600;
+
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card-number {
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        .card h3 {
+            margin: 0 0 12px;
+
+            font-size: 20px;
+
+            line-height: 1.35;
+
+            letter-spacing: -0.3px;
+        }
+
+        .card h3 a {
+            text-decoration: none;
+        }
+
+        .card h3 a:hover {
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        .card-description {
+            margin: 0;
+
+            color: #666;
+
+            font-size: 14px;
+
+            line-height: 1.65;
+
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-bottom {
+            margin-top: auto;
+
+            padding-top: 22px;
+
+            border-top: 1px solid #eee;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            gap: 10px;
+        }
+
+        .location {
+            color: #777;
+
+            font-size: 12px;
+
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .read-more {
+            color: #222;
+
+            font-size: 12px;
+
+            font-weight: 600;
+
+            text-decoration: none;
+
+            white-space: nowrap;
+        }
+
+        .read-more:hover {
+            text-decoration: underline;
         }
 
 
+        /* =========================
+           EMPTY STATE
+        ========================= */
 
-        /* ================= TABLET ================= */
+        .empty-state {
+            background: white;
 
-        @media (max-width: 900px) {
+            border: 1px dashed #d6d2ca;
+
+            border-radius: 10px;
+
+            padding: 60px 25px;
+
+            text-align: center;
+        }
+
+        .empty-icon {
+            font-size: 28px;
+            margin-bottom: 12px;
+        }
+
+        .empty-state h3 {
+            margin: 0 0 8px;
+            font-size: 19px;
+        }
+
+        .empty-state p {
+            margin: 0;
+            color: #777;
+            font-size: 14px;
+        }
+
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        .footer {
+            border-top: 1px solid #e5e2dc;
+
+            padding: 25px 6%;
+
+            text-align: center;
+
+            color: #999;
+
+            font-size: 12px;
+        }
+
+
+        /* =========================
+           TABLET
+        ========================= */
+
+        @media (max-width: 950px) {
 
             .navbar {
-                padding: 16px 5%;
+                padding: 0 4%;
             }
-
-
-            .logo {
-                font-size: 20px;
-            }
-
-
-            .nav-links {
-                gap: 12px;
-            }
-
-
-            .hero {
-                padding: 65px 20px;
-            }
-
-
-            .hero h1 {
-                font-size: 40px;
-            }
-
 
             .cards {
                 grid-template-columns: repeat(2, 1fr);
             }
 
+            .container {
+                width: 90%;
+            }
+
         }
 
 
+        /* =========================
+           MOBILE
+        ========================= */
 
-        /* ================= MOBILE ================= */
-
-        @media (max-width: 600px) {
+        @media (max-width: 650px) {
 
             .navbar {
-                flex-direction: column;
+                height: auto;
 
-                align-items: center;
+                min-height: 70px;
 
-                text-align: center;
+                padding: 14px 18px;
 
-                padding: 15px 10px;
+                gap: 12px;
+
+                flex-wrap: wrap;
             }
-
 
             .logo {
-                font-size: 20px;
-
-                white-space: normal;
+                font-size: 18px;
             }
-
 
             .nav-links {
-                width: 100%;
+                gap: 7px;
 
-                display: flex;
-
-                flex-direction: row;
-
-                justify-content: center;
-
-                align-items: center;
-
-                gap: 8px;
-
-                flex-wrap: nowrap;
+                margin-left: auto;
             }
 
+            .nav-links a {
+                font-size: 12px;
+            }
 
-            .nav-links a,
             .welcome {
-                font-size: 13px;
-
-                white-space: nowrap;
+                display: none;
             }
-
 
             .login-btn,
             .register-btn,
             .logout-btn {
-                padding: 7px 9px;
+                padding: 8px 10px;
             }
-
 
             .hero {
-                padding: 55px 15px;
+                padding: 65px 18px 70px;
             }
-
 
             .hero h1 {
-                font-size: 32px;
-                line-height: 1.2;
+                letter-spacing: -1.2px;
             }
-
 
             .hero p {
-                font-size: 17px;
-                line-height: 1.5;
+                font-size: 16px;
             }
-
-
-            .search-box {
-                margin-top: 25px;
-            }
-
 
             .search-box form {
                 flex-direction: column;
 
-                width: 100%;
+                padding: 6px;
             }
-
-
-            .search-box input {
-                width: 100%;
-
-                padding: 14px;
-            }
-
 
             .search-box button {
-                width: 100%;
-
-                padding: 14px;
+                min-height: 46px;
             }
-
 
             .container {
                 width: 92%;
 
-                margin: 30px auto;
+                padding: 45px 0 60px;
             }
 
+            .section-heading {
+                align-items: flex-start;
 
-            .container h2 {
-                font-size: 24px;
+                flex-direction: column;
 
-                line-height: 1.3;
+                margin-bottom: 22px;
             }
 
+            .section-heading h2 {
+                font-size: 23px;
+            }
 
             .cards {
                 grid-template-columns: 1fr;
 
-                gap: 15px;
+                gap: 14px;
             }
 
-
             .card {
-                width: 100%;
+                min-height: 230px;
 
-                padding: 20px;
+                padding: 21px;
             }
 
         }
 
 
-
-        /* ================= SMALL MOBILE ================= */
+        /* =========================
+           SMALL PHONE
+        ========================= */
 
         @media (max-width: 400px) {
 
+            .navbar {
+                justify-content: center;
+            }
+
+            .logo {
+                width: 100%;
+                text-align: center;
+            }
+
             .nav-links {
-                flex-direction: row;
+                width: 100%;
 
                 justify-content: center;
 
-                align-items: center;
-
-                gap: 6px;
-
-                flex-wrap: nowrap;
+                margin: 0;
             }
 
-
-            .nav-links a,
-            .welcome {
-                font-size: 12px;
+            .hero {
+                padding-top: 55px;
             }
-
-
-            .login-btn,
-            .register-btn,
-            .logout-btn {
-                padding: 6px 8px;
-            }
-
 
             .hero h1 {
-                font-size: 28px;
+                font-size: 35px;
             }
-
 
             .hero p {
                 font-size: 15px;
-            }
-
-
-            .container h2 {
-                font-size: 21px;
             }
 
         }
@@ -502,20 +661,18 @@
 <body>
 
 
-    <!-- ================= NAVBAR ================= -->
+    <!-- =========================
+         NAVBAR
+    ========================= -->
 
     <nav class="navbar">
 
-
         <a href="{% url 'home' %}" class="logo">
-
             Things Nobody Told Me
-
         </a>
 
 
         <div class="nav-links">
-
 
             <a href="{% url 'home' %}">
                 Home
@@ -524,7 +681,6 @@
 
             {% if user.is_authenticated %}
 
-
                 <a
                     href="{% url 'share_tip' %}"
                     class="share-btn"
@@ -532,13 +688,9 @@
                     Share a Tip
                 </a>
 
-
                 <span class="welcome">
-
                     Welcome, {{ user.username }}
-
                 </span>
-
 
                 <a
                     href="{% url 'logout' %}"
@@ -547,9 +699,7 @@
                     Logout
                 </a>
 
-
             {% else %}
-
 
                 <a
                     href="{% url 'login' %}"
@@ -558,7 +708,6 @@
                     Login
                 </a>
 
-
                 <a
                     href="{% url 'register' %}"
                     class="register-btn"
@@ -566,147 +715,206 @@
                     Register
                 </a>
 
-
             {% endif %}
 
-
         </div>
-
 
     </nav>
 
 
 
-    <!-- ================= HERO ================= -->
+    <!-- =========================
+         HERO
+    ========================= -->
 
-    <div class="hero">
+    <section class="hero">
 
+        <div class="hero-content">
 
-        <h1>
+            <span class="eyebrow">
+                Shared knowledge • Real experiences
+            </span>
 
-            Things Nobody Told Me
+            <h1>
+                The things you usually learn too late.
+            </h1>
 
-        </h1>
-
-
-        <p>
-
-            Real experiences. Useful local knowledge.
-
-        </p>
-
-
-        <div class="search-box">
-
-
-            <form method="GET" action="">
+            <p>
+                Discover useful tips, local knowledge and real experiences
+                shared by people who have already been there.
+            </p>
 
 
-                <input
-                    type="text"
-                    name="search"
-                    value="{{ search_query }}"
-                    placeholder="Search for a place, city or useful tip..."
-                >
+            <div class="search-box">
+
+                <form method="GET" action="">
+
+                    <input
+                        type="text"
+                        name="search"
+                        value="{{ search_query }}"
+                        placeholder="Search a place, city or useful tip..."
+                    >
+
+                    <button type="submit">
+                        Search
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </section>
 
 
-                <button type="submit">
 
-                    Search
+    <!-- =========================
+         KNOWLEDGE
+    ========================= -->
 
-                </button>
+    <main class="container">
 
 
-            </form>
+        <div class="section-heading">
 
+            <div>
+
+                <h2>
+                    Latest knowledge
+                </h2>
+
+            </div>
+
+            <p>
+                Real tips from the community
+            </p>
 
         </div>
 
 
-    </div>
+        {% if knowledge_list %}
+
+            <div class="cards">
 
 
+                {% for knowledge in knowledge_list %}
 
-    <!-- ================= KNOWLEDGE CARDS ================= -->
-
-    <div class="container">
-
-
-        <h2>
-
-            Latest Things Nobody Told Me
-
-        </h2>
+                    <article class="card">
 
 
-        <div class="cards">
+                        <div class="card-top">
+
+                            {% if knowledge.category %}
+
+                                <span class="tag">
+                                    {{ knowledge.category.name }}
+                                </span>
+
+                            {% else %}
+
+                                <span class="tag">
+                                    General
+                                </span>
+
+                            {% endif %}
 
 
-            {% for knowledge in knowledge_list %}
+                            <span class="card-number">
+                                #{{ forloop.counter }}
+                            </span>
+
+                        </div>
 
 
-                <div class="card">
+                        <h3>
+
+                            <a
+                                href="{% url 'knowledge_detail' knowledge.pk %}"
+                            >
+                                {{ knowledge.title }}
+                            </a>
+
+                        </h3>
 
 
-                    <h3>
+                        <p class="card-description">
+
+                            {{ knowledge.description }}
+
+                        </p>
 
 
-                        <a
-                            href="{% url 'knowledge_detail' knowledge.pk %}"
-                        >
-
-                            {{ knowledge.title }}
-
-                        </a>
+                        <div class="card-bottom">
 
 
-                    </h3>
+                            <span class="location">
+
+                                {% if knowledge.location %}
+                                    📍 {{ knowledge.location.name }}{% if knowledge.location.city %}, {{ knowledge.location.city }}{% endif %}
+                                {% else %}
+                                    Community knowledge
+                                {% endif %}
+
+                            </span>
 
 
-                    <p>
-
-                        {{ knowledge.description }}
-
-                    </p>
-
-
-                    <span class="tag">
-
-                        {{ knowledge.category.name }}
-
-                    </span>
+                            <a
+                                href="{% url 'knowledge_detail' knowledge.pk %}"
+                                class="read-more"
+                            >
+                                Read tip →
+                            </a>
 
 
-                    <p>
-
-                        📍
-
-                        {{ knowledge.location.name }},
-                        {{ knowledge.location.city }}
-
-                    </p>
+                        </div>
 
 
+                    </article>
+
+                {% endfor %}
+
+
+            </div>
+
+
+        {% else %}
+
+
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    ✦
                 </div>
 
-
-            {% empty %}
-
+                <h3>
+                    Nothing here yet
+                </h3>
 
                 <p>
-
-                    No knowledge available yet.
-
+                    No knowledge matched your search.
                 </p>
 
-
-            {% endfor %}
-
-
-        </div>
+            </div>
 
 
-    </div>
+        {% endif %}
+
+
+    </main>
+
+
+
+    <!-- =========================
+         FOOTER
+    ========================= -->
+
+    <footer class="footer">
+
+        Things Nobody Told Me · Real experiences worth sharing.
+
+    </footer>
 
 
 </body>

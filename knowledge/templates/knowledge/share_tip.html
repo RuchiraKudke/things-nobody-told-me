@@ -15,17 +15,15 @@
         }
 
         html {
-            width: 100%;
-            overflow-x: hidden;
+            scroll-behavior: smooth;
         }
 
         body {
             margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f5f5f5;
-            color: #111;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f7f6f2;
+            color: #191919;
             min-height: 100vh;
-            overflow-x: hidden;
         }
 
 
@@ -34,118 +32,295 @@
         ========================= */
 
         .navbar {
-            background: white;
-            padding: 18px 7%;
+            min-height: 74px;
+
+            padding: 0 6%;
+
+            background: #ffffff;
 
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
+
+            border-bottom: 1px solid #e6e3dd;
+
+            position: sticky;
+            top: 0;
+            z-index: 100;
 
             gap: 20px;
-
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
 
-
         .logo {
-            font-size: 22px;
-            font-weight: bold;
-
-            color: #111;
             text-decoration: none;
+
+            color: #171717;
+
+            font-size: 20px;
+            font-weight: 700;
+
+            letter-spacing: -0.4px;
 
             white-space: nowrap;
         }
-
 
         .nav-links {
             display: flex;
             align-items: center;
 
-            gap: 12px;
-
-            flex-shrink: 0;
+            gap: 10px;
         }
-
 
         .nav-links a {
             text-decoration: none;
 
-            font-size: 15px;
+            font-size: 13px;
             font-weight: 600;
 
-            white-space: nowrap;
+            transition: 0.2s ease;
         }
-
 
         .home-btn {
-            color: #222;
+            color: #333;
 
-            border: 1px solid #222;
+            border: 1px solid #d7d4ce;
 
-            padding: 10px 17px;
+            padding: 9px 15px;
 
-            border-radius: 7px;
+            border-radius: 6px;
+
+            background: #ffffff;
         }
-
-
-        .logout-btn {
-            background: #222;
-
-            color: white !important;
-
-            padding: 10px 17px;
-
-            border-radius: 7px;
-        }
-
 
         .home-btn:hover {
-            background: #f2f2f2;
+            background: #f2f1ed;
+
+            border-color: #bdb9b1;
         }
 
+        .logout-btn {
+            color: #ffffff !important;
+
+            background: #191919;
+
+            padding: 10px 16px;
+
+            border-radius: 6px;
+        }
 
         .logout-btn:hover {
-            background: #444;
+            background: #383838;
         }
 
 
         /* =========================
-           MAIN CONTAINER
+           MAIN LAYOUT
         ========================= */
 
-        .container {
-            width: 90%;
-            max-width: 700px;
+        .page {
+            width: 88%;
+            max-width: 1120px;
 
-            margin: 45px auto;
+            margin: 0 auto;
+
+            padding: 55px 0 75px;
+        }
+
+        .layout {
+            display: grid;
+
+            grid-template-columns: 0.78fr 1.22fr;
+
+            gap: 24px;
+
+            align-items: start;
         }
 
 
-        .card {
-            background: white;
+        /* =========================
+           INTRO PANEL
+        ========================= */
 
-            padding: 40px;
+        .intro {
+            background: #1d1d1c;
 
-            border-radius: 15px;
+            color: #ffffff;
 
-            box-shadow:
-                0 3px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 11px;
+
+            padding: 38px 34px;
+
+            position: sticky;
+
+            top: 100px;
+
+            overflow: hidden;
+        }
+
+        .intro::after {
+            content: "";
+
+            position: absolute;
+
+            width: 240px;
+            height: 240px;
+
+            border: 1px solid rgba(255,255,255,0.08);
+
+            border-radius: 50%;
+
+            right: -120px;
+            bottom: -110px;
+        }
+
+        .intro-label {
+            display: inline-block;
+
+            margin-bottom: 25px;
+
+            color: #aaa;
+
+            font-size: 11px;
+
+            font-weight: 700;
+
+            letter-spacing: 1.8px;
+
+            text-transform: uppercase;
+        }
+
+        .intro h1 {
+            margin: 0 0 17px;
+
+            font-size: 38px;
+
+            line-height: 1.08;
+
+            letter-spacing: -1.2px;
+
+            position: relative;
+
+            z-index: 2;
+        }
+
+        .intro-text {
+            margin: 0;
+
+            color: #c5c5c5;
+
+            font-size: 14px;
+
+            line-height: 1.75;
+
+            position: relative;
+
+            z-index: 2;
         }
 
 
-        h1 {
-            margin-top: 0;
-            margin-bottom: 10px;
+        /* =========================
+           TIPS
+        ========================= */
 
-            font-size: 32px;
+        .tips {
+            margin-top: 35px;
+
+            padding-top: 27px;
+
+            border-top: 1px solid #393938;
+
+            position: relative;
+
+            z-index: 2;
+        }
+
+        .tips-title {
+            margin: 0 0 16px;
+
+            font-size: 12px;
+
+            text-transform: uppercase;
+
+            letter-spacing: 1px;
+
+            color: #999;
+        }
+
+        .tip {
+            display: flex;
+
+            gap: 11px;
+
+            margin-bottom: 13px;
+
+            color: #d0d0d0;
+
+            font-size: 13px;
+
+            line-height: 1.55;
+        }
+
+        .tip:last-child {
+            margin-bottom: 0;
+        }
+
+        .tip-mark {
+            flex-shrink: 0;
+
+            width: 18px;
+            height: 18px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            border: 1px solid #555;
+
+            border-radius: 50%;
+
+            color: #aaa;
+
+            font-size: 10px;
         }
 
 
-        .subtitle {
-            color: #666;
+        /* =========================
+           FORM CARD
+        ========================= */
 
-            margin-bottom: 30px;
+        .form-card {
+            background: #ffffff;
+
+            border: 1px solid #e4e1da;
+
+            border-radius: 11px;
+
+            padding: 38px 40px;
+        }
+
+        .form-heading {
+            margin-bottom: 31px;
+
+            padding-bottom: 23px;
+
+            border-bottom: 1px solid #ebe8e2;
+        }
+
+        .form-heading h2 {
+            margin: 0 0 7px;
+
+            font-size: 24px;
+
+            letter-spacing: -0.6px;
+        }
+
+        .form-heading p {
+            margin: 0;
+
+            color: #858585;
+
+            font-size: 13px;
 
             line-height: 1.5;
         }
@@ -156,20 +331,25 @@
         ========================= */
 
         .messages {
-            margin-bottom: 20px;
+            margin-bottom: 23px;
         }
 
-
         .message {
-            background: #eee;
+            padding: 12px 14px;
 
-            padding: 12px;
+            background: #f0eee9;
 
-            border-radius: 7px;
+            border-left: 3px solid #252525;
+
+            border-radius: 5px;
 
             margin-bottom: 8px;
 
-            font-size: 14px;
+            color: #444;
+
+            font-size: 13px;
+
+            line-height: 1.5;
         }
 
 
@@ -178,167 +358,254 @@
         ========================= */
 
         .form-group {
-            margin-bottom: 22px;
+            margin-bottom: 23px;
         }
-
 
         label {
             display: block;
 
-            font-weight: bold;
-
             margin-bottom: 8px;
+
+            color: #292929;
+
+            font-size: 13px;
+
+            font-weight: 700;
         }
 
+        .field-note {
+            margin: -3px 0 9px;
+
+            color: #999;
+
+            font-size: 11px;
+        }
 
         input,
         textarea,
         select {
-
             width: 100%;
 
-            padding: 13px;
+            padding: 13px 14px;
 
-            border: 1px solid #ccc;
+            border: 1px solid #d5d2cc;
 
-            border-radius: 8px;
-
-            font-size: 16px;
-
-            font-family: Arial, sans-serif;
+            border-radius: 6px;
 
             outline: none;
 
-            background: white;
+            background: #ffffff;
+
+            color: #222;
+
+            font-family: Arial, Helvetica, sans-serif;
+
+            font-size: 14px;
+
+            transition:
+                border-color 0.2s ease,
+                box-shadow 0.2s ease;
         }
 
+        input::placeholder,
+        textarea::placeholder {
+            color: #aaa;
+        }
+
+        input:hover,
+        textarea:hover,
+        select:hover {
+            border-color: #b9b5ad;
+        }
 
         input:focus,
         textarea:focus,
         select:focus {
+            border-color: #252525;
 
-            border-color: #222;
-
-            box-shadow:
-                0 0 0 2px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 0 0 3px rgba(25,25,25,0.06);
         }
 
-
         textarea {
-
-            min-height: 150px;
+            min-height: 175px;
 
             resize: vertical;
+
+            line-height: 1.65;
         }
 
 
         /* =========================
-           NEW LOCATION BOX
+           CHARACTER FEEL / DESCRIPTION
+        ========================= */
+
+        .description-wrap {
+            position: relative;
+        }
+
+        .description-hint {
+            display: flex;
+
+            justify-content: space-between;
+
+            gap: 10px;
+
+            margin-top: 7px;
+
+            color: #999;
+
+            font-size: 11px;
+        }
+
+
+        /* =========================
+           LOCATION
         ========================= */
 
         .new-location-box {
-
             display: none;
-
-            background: #f8f8f8;
-
-            border: 1px solid #ddd;
-
-            border-radius: 10px;
-
-            padding: 18px;
 
             margin-top: -5px;
 
-            margin-bottom: 22px;
-        }
+            margin-bottom: 23px;
 
+            padding: 21px;
+
+            background: #faf9f6;
+
+            border: 1px solid #e2dfd8;
+
+            border-radius: 8px;
+        }
 
         .new-location-box.show {
-
             display: block;
+
+            animation: appear 0.2s ease;
         }
 
+        @keyframes appear {
+
+            from {
+                opacity: 0;
+                transform: translateY(-4px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+        }
 
         .new-location-title {
+            margin-bottom: 6px;
 
-            font-weight: bold;
+            font-size: 15px;
 
-            margin-bottom: 15px;
-
-            font-size: 16px;
+            font-weight: 700;
         }
 
-
         .new-location-note {
+            margin: 0 0 19px;
 
-            color: #666;
+            color: #888;
 
-            font-size: 13px;
+            font-size: 12px;
 
-            line-height: 1.5;
+            line-height: 1.55;
+        }
 
-            margin-top: 0;
-
-            margin-bottom: 18px;
+        .new-location-box .form-group:last-child {
+            margin-bottom: 0;
         }
 
 
         /* =========================
-           SUBMIT BUTTON
+           SUBMIT AREA
         ========================= */
 
-        .submit-btn {
+        .submit-area {
+            margin-top: 30px;
 
+            padding-top: 25px;
+
+            border-top: 1px solid #ebe8e2;
+        }
+
+        .submit-btn {
             width: 100%;
 
-            padding: 14px;
+            min-height: 50px;
+
+            padding: 14px 18px;
 
             border: none;
 
-            border-radius: 8px;
+            border-radius: 6px;
 
-            background: #222;
+            background: #191919;
 
-            color: white;
+            color: #ffffff;
 
-            font-size: 17px;
+            font-size: 14px;
 
-            font-weight: bold;
+            font-weight: 700;
 
             cursor: pointer;
+
+            transition:
+                background 0.2s ease,
+                transform 0.2s ease;
         }
 
-
         .submit-btn:hover {
+            background: #363636;
 
-            background: #444;
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-note {
+            margin: 11px 0 0;
+
+            text-align: center;
+
+            color: #999;
+
+            font-size: 11px;
+
+            line-height: 1.5;
         }
 
 
         /* =========================
-           BACK LINK
+           BACK
         ========================= */
 
         .back-link {
-
             display: block;
+
+            margin-top: 19px;
 
             text-align: center;
 
-            margin-top: 20px;
+            color: #666;
 
-            color: #222;
+            font-size: 12px;
+
+            font-weight: 600;
 
             text-decoration: none;
 
-            font-weight: bold;
+            transition: 0.2s ease;
         }
 
-
         .back-link:hover {
-
-            text-decoration: underline;
+            color: #111;
         }
 
 
@@ -346,64 +613,42 @@
            TABLET
         ========================= */
 
-        @media (max-width: 700px) {
+        @media (max-width: 850px) {
 
-            .navbar {
-
-                padding: 15px 5%;
-
+            .page {
+                width: 90%;
             }
 
+            .layout {
+                grid-template-columns: 1fr;
 
-            .logo {
-
-                font-size: 20px;
-
+                gap: 18px;
             }
 
+            .intro {
+                position: relative;
 
-            .nav-links {
-
-                gap: 8px;
-
+                top: auto;
             }
 
-
-            .nav-links a {
-
-                font-size: 14px;
-
+            .intro h1 {
+                font-size: 32px;
             }
 
+            .tips {
+                display: grid;
 
-            .home-btn,
-            .logout-btn {
+                grid-template-columns: repeat(2, 1fr);
 
-                padding: 9px 13px;
-
+                gap: 12px 20px;
             }
 
-
-            .container {
-
-                width: 94%;
-
-                margin: 30px auto;
-
+            .tips-title {
+                grid-column: 1 / -1;
             }
 
-
-            .card {
-
-                padding: 28px 22px;
-
-            }
-
-
-            h1 {
-
-                font-size: 28px;
-
+            .tip {
+                margin-bottom: 0;
             }
 
         }
@@ -413,162 +658,143 @@
            MOBILE
         ========================= */
 
-        @media (max-width: 500px) {
+        @media (max-width: 600px) {
 
             .navbar {
+                min-height: 68px;
 
-                padding: 14px 15px;
+                padding: 12px 17px;
 
                 gap: 12px;
-
             }
-
 
             .logo {
-
-                font-size: 18px;
-
+                font-size: 17px;
             }
-
 
             .nav-links {
-
                 gap: 6px;
-
             }
-
-
-            .nav-links a {
-
-                font-size: 14px;
-
-            }
-
 
             .home-btn,
             .logout-btn {
+                padding: 8px 10px;
 
-                padding: 9px 11px;
-
+                font-size: 11px !important;
             }
 
+            .page {
+                width: 92%;
 
-            .container {
-
-                width: 94%;
-
-                margin: 22px auto;
-
+                padding: 25px 0 50px;
             }
 
+            .intro {
+                padding: 29px 24px;
 
-            .card {
-
-                padding: 25px 18px;
-
-                border-radius: 12px;
-
+                border-radius: 9px;
             }
 
-
-            h1 {
-
-                font-size: 26px;
-
+            .intro-label {
+                margin-bottom: 18px;
             }
 
+            .intro h1 {
+                font-size: 30px;
 
-            .subtitle {
-
-                font-size: 15px;
-
+                letter-spacing: -0.8px;
             }
 
+            .intro-text {
+                font-size: 13px;
+            }
+
+            .tips {
+                display: block;
+
+                margin-top: 27px;
+
+                padding-top: 23px;
+            }
+
+            .tip {
+                margin-bottom: 12px;
+            }
+
+            .form-card {
+                padding: 27px 20px;
+
+                border-radius: 9px;
+            }
+
+            .form-heading {
+                margin-bottom: 25px;
+
+                padding-bottom: 20px;
+            }
+
+            .form-heading h2 {
+                font-size: 21px;
+            }
+
+            .form-heading p {
+                font-size: 12px;
+            }
+
+            .form-group {
+                margin-bottom: 20px;
+            }
 
             input,
             textarea,
             select {
+                padding: 13px;
 
                 font-size: 16px;
-
-                padding: 14px;
-
             }
-
 
             textarea {
-
-                min-height: 140px;
-
+                min-height: 155px;
             }
-
-
-            .submit-btn {
-
-                padding: 15px;
-
-                font-size: 17px;
-
-            }
-
 
             .new-location-box {
-
-                padding: 15px;
-
+                padding: 17px;
             }
 
         }
 
 
         /* =========================
-           VERY SMALL PHONES
+           SMALL PHONES
         ========================= */
 
-        @media (max-width: 360px) {
+        @media (max-width: 380px) {
 
             .navbar {
-
-                padding: 12px 10px;
-
+                padding: 11px 12px;
             }
-
 
             .logo {
-
-                font-size: 16px;
-
+                font-size: 15px;
             }
-
-
-            .nav-links {
-
-                gap: 4px;
-
-            }
-
 
             .home-btn,
             .logout-btn {
+                padding: 8px;
 
-                padding: 8px 9px;
-
-                font-size: 13px !important;
-
+                font-size: 10px !important;
             }
 
-
-            .container {
-
-                width: 96%;
-
+            .page {
+                width: 94%;
             }
 
+            .intro h1 {
+                font-size: 27px;
+            }
 
-            .card {
-
-                padding: 22px 15px;
-
+            .form-card {
+                padding: 24px 16px;
             }
 
         }
@@ -587,7 +813,10 @@
 
     <nav class="navbar">
 
-        <a href="{% url 'home' %}" class="logo">
+        <a
+            href="{% url 'home' %}"
+            class="logo"
+        >
             Things Nobody Told Me
         </a>
 
@@ -598,7 +827,7 @@
                 href="{% url 'home' %}"
                 class="home-btn"
             >
-                Home
+                ← Home
             </a>
 
 
@@ -614,326 +843,437 @@
     </nav>
 
 
+
     <!-- =========================
-         MAIN
+         PAGE
     ========================= -->
 
-    <div class="container">
+    <main class="page">
 
-        <div class="card">
 
+        <div class="layout">
 
-            <h1>
-                Share a Tip
-            </h1>
 
+            <!-- =========================
+                 INTRO
+            ========================= -->
 
-            <p class="subtitle">
-                Share something useful that you wish someone had told you.
-            </p>
+            <aside class="intro">
 
+                <span class="intro-label">
+                    Community knowledge
+                </span>
 
-            <!-- MESSAGES -->
 
-            {% if messages %}
+                <h1>
+                    Share what you wish you knew earlier.
+                </h1>
 
-                <div class="messages">
 
-                    {% for message in messages %}
+                <p class="intro-text">
+                    Your experience might save someone else time,
+                    money, confusion, or a bad decision.
+                </p>
 
-                        <div class="message">
-                            {{ message }}
-                        </div>
 
-                    {% endfor %}
+                <div class="tips">
 
-                </div>
-
-            {% endif %}
-
-
-            <!-- FORM -->
-
-            <form method="POST">
-
-                {% csrf_token %}
-
-
-                <!-- =========================
-                     TITLE
-                ========================= -->
-
-                <div class="form-group">
-
-                    <label for="title">
-                        Title
-                    </label>
-
-
-                    <input
-                        type="text"
-                        id="title"
-                        name="title"
-                        placeholder="Example: Best time to visit Lonavala"
-                        required
-                    >
-
-                </div>
-
-
-                <!-- =========================
-                     DESCRIPTION
-                ========================= -->
-
-                <div class="form-group">
-
-                    <label for="description">
-                        Description
-                    </label>
-
-
-                    <textarea
-                        id="description"
-                        name="description"
-                        placeholder="Share your experience or useful information..."
-                        required
-                    ></textarea>
-
-                </div>
-
-
-                <!-- =========================
-                     CATEGORY
-                ========================= -->
-
-                <div class="form-group">
-
-                    <label for="category">
-                        Category
-                    </label>
-
-
-                    <select
-                        id="category"
-                        name="category"
-                        required
-                    >
-
-                        <option value="">
-                            Select a category
-                        </option>
-
-
-                        {% for category in categories %}
-
-                            <option value="{{ category.id }}">
-                                {{ category.name }}
-                            </option>
-
-                        {% endfor %}
-
-                    </select>
-
-                </div>
-
-
-                <!-- =========================
-                     LOCATION
-                ========================= -->
-
-                <div class="form-group">
-
-                    <label for="location">
-                        Location
-                    </label>
-
-
-                    <select
-                        id="location"
-                        name="location"
-                        required
-                    >
-
-                        <option value="">
-                            Select a location
-                        </option>
-
-
-                        {% for location in locations %}
-
-                            <option value="{{ location.id }}">
-                                {{ location.name }}, {{ location.city }}
-                            </option>
-
-                        {% endfor %}
-
-
-                        <!-- NEW LOCATION OPTION -->
-
-                        <option value="new">
-                            + Other / Add New Location
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-                <!-- =========================
-                     NEW LOCATION FIELDS
-                ========================= -->
-
-                <div
-                    class="new-location-box"
-                    id="newLocationBox"
-                >
-
-                    <div class="new-location-title">
-
-                        Add New Location
-
-                    </div>
-
-
-                    <p class="new-location-note">
-
-                        Can't find your location above?
-                        Enter the location details below.
-
+                    <p class="tips-title">
+                        A useful tip usually includes
                     </p>
 
 
-                    <!-- LOCATION NAME -->
+                    <div class="tip">
+
+                        <span class="tip-mark">
+                            1
+                        </span>
+
+                        <span>
+                            Something you personally experienced
+                            or learned.
+                        </span>
+
+                    </div>
+
+
+                    <div class="tip">
+
+                        <span class="tip-mark">
+                            2
+                        </span>
+
+                        <span>
+                            Enough detail for someone else to
+                            actually understand it.
+                        </span>
+
+                    </div>
+
+
+                    <div class="tip">
+
+                        <span class="tip-mark">
+                            3
+                        </span>
+
+                        <span>
+                            A place or context when it matters.
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </aside>
+
+
+
+            <!-- =========================
+                 FORM
+            ========================= -->
+
+            <section class="form-card">
+
+
+                <div class="form-heading">
+
+                    <h2>
+                        Share a Tip
+                    </h2>
+
+                    <p>
+                        Tell the community something worth knowing.
+                    </p>
+
+                </div>
+
+
+
+                <!-- =========================
+                     MESSAGES
+                ========================= -->
+
+                {% if messages %}
+
+                    <div class="messages">
+
+                        {% for message in messages %}
+
+                            <div class="message">
+                                {{ message }}
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                {% endif %}
+
+
+
+                <!-- =========================
+                     FORM
+                ========================= -->
+
+                <form method="POST">
+
+                    {% csrf_token %}
+
+
+
+                    <!-- TITLE -->
 
                     <div class="form-group">
 
-                        <label for="new_location_name">
-                            Location Name
+                        <label for="title">
+                            Tip title
                         </label>
-
 
                         <input
                             type="text"
-                            id="new_location_name"
-                            name="new_location_name"
-                            placeholder="Example: DY Patil University"
+                            id="title"
+                            name="title"
+                            placeholder="Example: Check the last bus before leaving campus"
+                            required
                         >
 
                     </div>
 
 
-                    <!-- CITY -->
+
+                    <!-- DESCRIPTION -->
 
                     <div class="form-group">
 
-                        <label for="new_location_city">
-                            City
+                        <label for="description">
+                            What should people know?
                         </label>
 
+                        <div class="description-wrap">
 
-                        <input
-                            type="text"
-                            id="new_location_city"
-                            name="new_location_city"
-                            placeholder="Example: Pune"
-                        >
+                            <textarea
+                                id="description"
+                                name="description"
+                                placeholder="Explain what you learned, what happened, and why it might be useful to someone else..."
+                                required
+                            ></textarea>
+
+                            <div class="description-hint">
+
+                                <span>
+                                    Keep it clear and based on your experience.
+                                </span>
+
+                                <span>
+                                    Detailed is better than vague.
+                                </span>
+
+                            </div>
+
+                        </div>
 
                     </div>
 
 
-                    <!-- LOCATION TYPE -->
+
+                    <!-- CATEGORY -->
 
                     <div class="form-group">
 
-                        <label for="new_location_type">
-                            Location Type
+                        <label for="category">
+                            Category
                         </label>
-
 
                         <select
-                            id="new_location_type"
-                            name="new_location_type"
+                            id="category"
+                            name="category"
+                            required
                         >
 
                             <option value="">
-                                Select type
+                                Select a category
                             </option>
 
-                            <option value="College">
-                                College / University
+
+                            {% for category in categories %}
+
+                                <option value="{{ category.id }}">
+                                    {{ category.name }}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+
+                    <!-- LOCATION -->
+
+                    <div class="form-group">
+
+                        <label for="location">
+                            Location
+                        </label>
+
+                        <select
+                            id="location"
+                            name="location"
+                            required
+                        >
+
+                            <option value="">
+                                Select a location
                             </option>
 
-                            <option value="PG">
-                                PG / Hostel
-                            </option>
 
-                            <option value="Railway Station">
-                                Railway Station
-                            </option>
+                            {% for location in locations %}
 
-                            <option value="Bus Stand">
-                                Bus Stand
-                            </option>
+                                <option value="{{ location.id }}">
+                                    {{ location.name }}, {{ location.city }}
+                                </option>
 
-                            <option value="Hospital">
-                                Hospital
-                            </option>
+                            {% endfor %}
 
-                            <option value="Market">
-                                Market / Shopping
-                            </option>
 
-                            <option value="Restaurant">
-                                Restaurant / Food
-                            </option>
-
-                            <option value="Government Office">
-                                Government Office
-                            </option>
-
-                            <option value="Tourist Place">
-                                Tourist Place
-                            </option>
-
-                            <option value="Other">
-                                Other
+                            <option value="new">
+                                + Add a new location
                             </option>
 
                         </select>
 
                     </div>
 
-                </div>
 
 
-                <!-- =========================
-                     SUBMIT
-                ========================= -->
+                    <!-- =========================
+                         NEW LOCATION
+                    ========================= -->
 
-                <button
-                    type="submit"
-                    class="submit-btn"
+                    <div
+                        class="new-location-box"
+                        id="newLocationBox"
+                    >
+
+                        <div class="new-location-title">
+                            Add New Location
+                        </div>
+
+
+                        <p class="new-location-note">
+                            If the place isn't listed above,
+                            add its details here.
+                        </p>
+
+
+
+                        <!-- NAME -->
+
+                        <div class="form-group">
+
+                            <label for="new_location_name">
+                                Location name
+                            </label>
+
+                            <input
+                                type="text"
+                                id="new_location_name"
+                                name="new_location_name"
+                                placeholder="Example: DY Patil University"
+                            >
+
+                        </div>
+
+
+
+                        <!-- CITY -->
+
+                        <div class="form-group">
+
+                            <label for="new_location_city">
+                                City
+                            </label>
+
+                            <input
+                                type="text"
+                                id="new_location_city"
+                                name="new_location_city"
+                                placeholder="Example: Pune"
+                            >
+
+                        </div>
+
+
+
+                        <!-- TYPE -->
+
+                        <div class="form-group">
+
+                            <label for="new_location_type">
+                                Location type
+                            </label>
+
+                            <select
+                                id="new_location_type"
+                                name="new_location_type"
+                            >
+
+                                <option value="">
+                                    Select type
+                                </option>
+
+                                <option value="College">
+                                    College / University
+                                </option>
+
+                                <option value="PG">
+                                    PG / Hostel
+                                </option>
+
+                                <option value="Railway Station">
+                                    Railway Station
+                                </option>
+
+                                <option value="Bus Stand">
+                                    Bus Stand
+                                </option>
+
+                                <option value="Hospital">
+                                    Hospital
+                                </option>
+
+                                <option value="Market">
+                                    Market / Shopping
+                                </option>
+
+                                <option value="Restaurant">
+                                    Restaurant / Food
+                                </option>
+
+                                <option value="Government Office">
+                                    Government Office
+                                </option>
+
+                                <option value="Tourist Place">
+                                    Tourist Place
+                                </option>
+
+                                <option value="Other">
+                                    Other
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =========================
+                         SUBMIT
+                    ========================= -->
+
+                    <div class="submit-area">
+
+                        <button
+                            type="submit"
+                            class="submit-btn"
+                        >
+                            Share this tip
+                        </button>
+
+
+                        <p class="submit-note">
+                            Your tip will be reviewed before appearing
+                            in the community.
+                        </p>
+
+                    </div>
+
+
+                </form>
+
+
+
+                <a
+                    href="{% url 'home' %}"
+                    class="back-link"
                 >
-                    Share Tip
-                </button>
+                    ← Back to all knowledge
+
+                </a>
 
 
-            </form>
-
-
-            <!-- BACK -->
-
-            <a
-                href="{% url 'home' %}"
-                class="back-link"
-            >
-                ← Back to Home
-            </a>
+            </section>
 
 
         </div>
 
-    </div>
+
+    </main>
 
 
     <!-- =========================
