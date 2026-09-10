@@ -19,7 +19,10 @@ SECRET_KEY = os.environ.get(
     "django-insecure-change-this-in-production"
 )
 
-DEBUG = os.environ.get("DEBUG", "True") == "True"
+DEBUG = os.environ.get(
+    "DEBUG",
+    "True"
+) == "True"
 
 
 ALLOWED_HOSTS = [
@@ -84,7 +87,7 @@ MIDDLEWARE = [
 
 
 # =========================================================
-# URL CONFIGURATION
+# URL
 # =========================================================
 
 ROOT_URLCONF = "things_nobody_told_me.urls"
@@ -125,26 +128,21 @@ WSGI_APPLICATION = "things_nobody_told_me.wsgi.application"
 # =========================================================
 # DATABASE
 # =========================================================
-#
-# Render:
-# DATABASE_URL = PostgreSQL Internal Database URL
-#
-# Local:
-# SQLite will automatically be used if DATABASE_URL
-# does not exist.
-# =========================================================
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
 
 if DATABASE_URL:
+
     DATABASES = {
         "default": dj_database_url.parse(
             DATABASE_URL,
             conn_max_age=600,
         )
     }
+
 else:
+
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
@@ -159,37 +157,33 @@ else:
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        "NAME": (
-            "django.contrib.auth.password_validation."
-            "UserAttributeSimilarityValidator"
-        )
+        "NAME":
+        "django.contrib.auth.password_validation."
+        "UserAttributeSimilarityValidator",
     },
 
     {
-        "NAME": (
-            "django.contrib.auth.password_validation."
-            "MinimumLengthValidator"
-        )
+        "NAME":
+        "django.contrib.auth.password_validation."
+        "MinimumLengthValidator",
     },
 
     {
-        "NAME": (
-            "django.contrib.auth.password_validation."
-            "CommonPasswordValidator"
-        )
+        "NAME":
+        "django.contrib.auth.password_validation."
+        "CommonPasswordValidator",
     },
 
     {
-        "NAME": (
-            "django.contrib.auth.password_validation."
-            "NumericPasswordValidator"
-        )
+        "NAME":
+        "django.contrib.auth.password_validation."
+        "NumericPasswordValidator",
     },
 ]
 
 
 # =========================================================
-# LANGUAGE / TIMEZONE
+# LANGUAGE / TIME
 # =========================================================
 
 LANGUAGE_CODE = "en-us"
@@ -211,7 +205,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 
 # =========================================================
-# AUTHENTICATION REDIRECTS
+# LOGIN / LOGOUT
 # =========================================================
 
 LOGIN_URL = "/login/"
@@ -222,21 +216,12 @@ LOGOUT_REDIRECT_URL = "/"
 
 
 # =========================================================
-# EMAIL CONFIGURATION
-# =========================================================
-#
-# IMPORTANT:
-#
-# EMAIL_HOST_USER
-# = Gmail account used by your application to SEND emails.
-#
-# It is NOT where user emails are stored.
-#
-# User emails are stored in:
-# Django's auth_user table -> email column
+# EMAIL
 # =========================================================
 
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_BACKEND = (
+    "django.core.mail.backends.smtp.EmailBackend"
+)
 
 EMAIL_HOST = "smtp.gmail.com"
 
@@ -244,9 +229,15 @@ EMAIL_PORT = 587
 
 EMAIL_USE_TLS = True
 
-EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
+EMAIL_HOST_USER = os.environ.get(
+    "EMAIL_HOST_USER",
+    ""
+)
 
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
+EMAIL_HOST_PASSWORD = os.environ.get(
+    "EMAIL_HOST_PASSWORD",
+    ""
+)
 
 DEFAULT_FROM_EMAIL = os.environ.get(
     "DEFAULT_FROM_EMAIL",
@@ -264,7 +255,9 @@ PASSWORD_RESET_TIMEOUT = 3600
 
 
 # =========================================================
-# DEFAULT PRIMARY KEY
+# PRIMARY KEY
 # =========================================================
 
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+DEFAULT_AUTO_FIELD = (
+    "django.db.models.BigAutoField"
+)

@@ -1,11 +1,10 @@
-from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
-from django.db.models import Q
-from django.shortcuts import get_object_or_404, redirect, render
+from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
-from .models import Category, Knowledge, Location
+from .models import Knowledge, Location, Category
 
 
 # =========================================================
@@ -14,34 +13,38 @@ from .models import Category, Knowledge, Location
 
 def home(request):
 
-    search_query = request.GET.get("q", "").strip()
+    search_query = request.GET.get("search", "").strip()
 
-    knowledge_items = Knowledge.objects.filter(
-        status="approved"
-    ).select_related(
-        "category",
-        "location",
-        "author"
+    knowledge_list = (
+        Knowledge.objects
+        .filter(status="approved")
+        .select_related("category", "location", "author")
+        .order_by("-created_at")
     )
 
     if search_query:
-        knowledge_items = knowledge_items.filter(
-            Q(title__icontains=search_query)
-            | Q(description__icontains=search_query)
-            | Q(category__name__icontains=search_query)
-            | Q(location__name__icontains=search_query)
-            | Q(location__city__icontains=search_query)
+
+        knowledge_list = knowledge_list.filter(
+            title__icontains=search_query
+        ) | knowledge_list.filter(
+            description__icontains=search_query
+        ) | knowledge_list.filter(
+            category__name__icontains=search_query
+        ) | knowledge_list.filter(
+            location__name__icontains=search_query
+        ) | knowledge_list.filter(
+            location__city__icontains=search_query
         )
 
-    knowledge_items = knowledge_items.order_by("-created_at")
+        knowledge_list = knowledge_list.distinct()
 
     return render(
         request,
         "knowledge/home.html",
         {
-            "knowledge_items": knowledge_items,
+            "knowledge_list": knowledge_list,
             "search_query": search_query,
-        }
+        },
     )
 
 
@@ -55,18 +58,18 @@ def knowledge_detail(request, pk):
         Knowledge.objects.select_related(
             "category",
             "location",
-            "author"
+            "author",
         ),
         pk=pk,
-        status="approved"
+        status="approved",
     )
 
     return render(
         request,
         "knowledge/detail.html",
         {
-            "knowledge": knowledge
-        }
+            "knowledge": knowledge,
+        },
     )
 
 
@@ -81,25 +84,35 @@ def register(request):
 
     if request.method == "POST":
 
-        username = request.POST.get("username", "").strip()
+        username = request.POST.get(
+            "username",
+            ""
+        ).strip()
 
-        email = request.POST.get("email", "").strip().lower()
+        email = request.POST.get(
+            "email",
+            ""
+        ).strip().lower()
 
-        password = request.POST.get("password", "")
+        password = request.POST.get(
+            "password",
+            ""
+        )
 
         confirm_password = request.POST.get(
             "confirm_password",
             ""
         )
 
-        # -------------------------
-        # VALIDATION
-        # -------------------------
+        # -------------------------------------------------
+        # REQUIRED FIELDS
+        # -------------------------------------------------
 
-        if not username:
+        if not username or not email or not password or not confirm_password:
+
             messages.error(
                 request,
-                "Username is required."
+                "Please fill in all fields."
             )
 
             return render(
@@ -107,53 +120,9 @@ def register(request):
                 "knowledge/register.html"
             )
 
-        if not email:
-            messages.error(
-                request,
-                "Email is required."
-            )
-
-            return render(
-                request,
-                "knowledge/register.html"
-            )
-
-        if not password:
-            messages.error(
-                request,
-                "Password is required."
-            )
-
-            return render(
-                request,
-                "knowledge/register.html"
-            )
-
-        if len(password) < 8:
-            messages.error(
-                request,
-                "Password must contain at least 8 characters."
-            )
-
-            return render(
-                request,
-                "knowledge/register.html"
-            )
-
-        if password != confirm_password:
-            messages.error(
-                request,
-                "Passwords do not match."
-            )
-
-            return render(
-                request,
-                "knowledge/register.html"
-            )
-
-        # -------------------------
-        # CHECK USERNAME
-        # -------------------------
+        # -------------------------------------------------
+        # USERNAME
+        # -------------------------------------------------
 
         if User.objects.filter(
             username__iexact=username
@@ -161,7 +130,7 @@ def register(request):
 
             messages.error(
                 request,
-                "Username already exists."
+                "Username already exists. Please choose another username."
             )
 
             return render(
@@ -169,9 +138,9 @@ def register(request):
                 "knowledge/register.html"
             )
 
-        # -------------------------
-        # CHECK EMAIL
-        # -------------------------
+        # -------------------------------------------------
+        # EMAIL
+        # -------------------------------------------------
 
         if User.objects.filter(
             email__iexact=email
@@ -187,33 +156,60 @@ def register(request):
                 "knowledge/register.html"
             )
 
-        # -------------------------
+        # -------------------------------------------------
+        # PASSWORD
+        # -------------------------------------------------
+
+        if len(password) < 8:
+
+            messages.error(
+                request,
+                "Password must contain at least 8 characters."
+            )
+
+            return render(
+                request,
+                "knowledge/register.html"
+            )
+
+        if password != confirm_password:
+
+            messages.error(
+                request,
+                "Passwords do not match."
+            )
+
+            return render(
+                request,
+                "knowledge/register.html"
+            )
+
+        # -------------------------------------------------
         # CREATE USER
-        # -------------------------
+        # -------------------------------------------------
 
         user = User.objects.create_user(
             username=username,
             email=email,
-            password=password
+            password=password,
         )
 
         user.is_active = True
-
         user.save()
 
-        # -------------------------
-        # LOGIN AFTER REGISTER
-        # -------------------------
+        # -------------------------------------------------
+        # AUTOMATIC LOGIN
+        # -------------------------------------------------
 
         login(
             request,
             user,
-            backend="django.contrib.auth.backends.ModelBackend"
+            backend="django.contrib.auth.backends.ModelBackend",
         )
 
         messages.success(
             request,
-            "Account created successfully!"
+            f"Account created successfully! Welcome, {user.username}."
         )
 
         return redirect("home")
@@ -245,70 +241,111 @@ def user_login(request):
             ""
         )
 
-        user = None
-
         # -------------------------------------------------
-        # LOGIN USING USERNAME
+        # VALIDATION
         # -------------------------------------------------
 
-        username_user = User.objects.filter(
+        if not login_input or not password:
+
+            messages.error(
+                request,
+                "Please enter your username/email and password."
+            )
+
+            return render(
+                request,
+                "knowledge/login.html"
+            )
+
+        # -------------------------------------------------
+        # FIND USER
+        # -------------------------------------------------
+
+        user = User.objects.filter(
             username__iexact=login_input
         ).first()
 
-        if username_user:
+        if user is None:
 
-            user = authenticate(
-                request,
-                username=username_user.username,
-                password=password
-            )
-
-        # -------------------------------------------------
-        # LOGIN USING EMAIL
-        # -------------------------------------------------
-
-        else:
-
-            email_user = User.objects.filter(
+            user = User.objects.filter(
                 email__iexact=login_input
             ).first()
 
-            if email_user:
-
-                user = authenticate(
-                    request,
-                    username=email_user.username,
-                    password=password
-                )
-
         # -------------------------------------------------
-        # SUCCESS
+        # USER NOT FOUND
         # -------------------------------------------------
 
-        if user is not None and user.is_active:
+        if user is None:
 
-            login(request, user)
-
-            messages.success(
+            messages.error(
                 request,
-                f"Welcome back, {user.username}!"
+                "Invalid username/email or password."
             )
 
-            next_url = request.GET.get("next")
-
-            if next_url:
-                return redirect(next_url)
-
-            return redirect("home")
+            return render(
+                request,
+                "knowledge/login.html"
+            )
 
         # -------------------------------------------------
-        # FAILURE
+        # CHECK ACTIVE
         # -------------------------------------------------
 
-        messages.error(
+        if not user.is_active:
+
+            messages.error(
+                request,
+                "This account is inactive."
+            )
+
+            return render(
+                request,
+                "knowledge/login.html"
+            )
+
+        # -------------------------------------------------
+        # CHECK PASSWORD
+        # -------------------------------------------------
+
+        authenticated_user = authenticate(
             request,
-            "Invalid username/email or password."
+            username=user.username,
+            password=password,
         )
+
+        if authenticated_user is None:
+
+            messages.error(
+                request,
+                "Invalid username/email or password."
+            )
+
+            return render(
+                request,
+                "knowledge/login.html"
+            )
+
+        # -------------------------------------------------
+        # LOGIN
+        # -------------------------------------------------
+
+        login(
+            request,
+            authenticated_user,
+            backend="django.contrib.auth.backends.ModelBackend",
+        )
+
+        messages.success(
+            request,
+            f"Welcome back, {authenticated_user.username}!"
+        )
+
+        next_url = request.GET.get("next")
+
+        if next_url:
+            return redirect(next_url)
+
+        return redirect("home")
 
     return render(
         request,
@@ -342,6 +379,11 @@ def share_tip(request):
 
     categories = Category.objects.all().order_by("name")
 
+    locations = Location.objects.all().order_by(
+        "city",
+        "name"
+    )
+
     if request.method == "POST":
 
         title = request.POST.get(
@@ -357,28 +399,34 @@ def share_tip(request):
         category_id = request.POST.get(
             "category",
             ""
-        )
+        ).strip()
 
-        location_name = request.POST.get(
-            "location_name",
+        location_id = request.POST.get(
+            "location",
             ""
         ).strip()
 
-        city = request.POST.get(
-            "city",
+        new_location_name = request.POST.get(
+            "new_location_name",
             ""
         ).strip()
 
-        location_type = request.POST.get(
-            "location_type",
-            "General"
+        new_location_city = request.POST.get(
+            "new_location_city",
+            ""
+        ).strip()
+
+        new_location_type = request.POST.get(
+            "new_location_type",
+            ""
         ).strip()
 
         # -------------------------------------------------
-        # VALIDATION
+        # TITLE
         # -------------------------------------------------
 
         if not title:
+
             messages.error(
                 request,
                 "Title is required."
@@ -388,11 +436,17 @@ def share_tip(request):
                 request,
                 "knowledge/share_tip.html",
                 {
-                    "categories": categories
-                }
+                    "categories": categories,
+                    "locations": locations,
+                },
             )
 
+        # -------------------------------------------------
+        # DESCRIPTION
+        # -------------------------------------------------
+
         if not description:
+
             messages.error(
                 request,
                 "Description is required."
@@ -402,11 +456,17 @@ def share_tip(request):
                 request,
                 "knowledge/share_tip.html",
                 {
-                    "categories": categories
-                }
+                    "categories": categories,
+                    "locations": locations,
+                },
             )
 
+        # -------------------------------------------------
+        # CATEGORY
+        # -------------------------------------------------
+
         if not category_id:
+
             messages.error(
                 request,
                 "Please select a category."
@@ -416,50 +476,96 @@ def share_tip(request):
                 request,
                 "knowledge/share_tip.html",
                 {
-                    "categories": categories
-                }
+                    "categories": categories,
+                    "locations": locations,
+                },
             )
-
-        # -------------------------------------------------
-        # CATEGORY
-        # -------------------------------------------------
 
         category = get_object_or_404(
             Category,
-            id=category_id
+            pk=category_id
         )
 
         # -------------------------------------------------
         # LOCATION
         # -------------------------------------------------
 
-        if location_name and city:
+        if location_id == "new":
 
-            location, created = Location.objects.get_or_create(
-                name=location_name,
-                city=city,
-                defaults={
-                    "location_type": location_type
-                }
-            )
+            if not new_location_name:
+
+                messages.error(
+                    request,
+                    "Please enter the new location name."
+                )
+
+                return render(
+                    request,
+                    "knowledge/share_tip.html",
+                    {
+                        "categories": categories,
+                        "locations": locations,
+                    },
+                )
+
+            if not new_location_city:
+
+                messages.error(
+                    request,
+                    "Please enter the city."
+                )
+
+                return render(
+                    request,
+                    "knowledge/share_tip.html",
+                    {
+                        "categories": categories,
+                        "locations": locations,
+                    },
+                )
+
+            if not new_location_type:
+
+                new_location_type = "Other"
+
+            location = Location.objects.filter(
+                name__iexact=new_location_name,
+                city__iexact=new_location_city,
+            ).first()
+
+            if location is None:
+
+                location = Location.objects.create(
+                    name=new_location_name,
+                    city=new_location_city,
+                    location_type=new_location_type,
+                )
 
         else:
 
-            messages.error(
-                request,
-                "Location name and city are required."
-            )
+            if not location_id:
 
-            return render(
-                request,
-                "knowledge/share_tip.html",
-                {
-                    "categories": categories
-                }
+                messages.error(
+                    request,
+                    "Please select a location."
+                )
+
+                return render(
+                    request,
+                    "knowledge/share_tip.html",
+                    {
+                        "categories": categories,
+                        "locations": locations,
+                    },
+                )
+
+            location = get_object_or_404(
+                Location,
+                pk=location_id
             )
 
         # -------------------------------------------------
-        # CREATE KNOWLEDGE
+        # CREATE TIP
         # -------------------------------------------------
 
         Knowledge.objects.create(
@@ -468,12 +574,12 @@ def share_tip(request):
             location=location,
             category=category,
             author=request.user,
-            status="pending"
+            status="pending",
         )
 
         messages.success(
             request,
-            "Your tip has been submitted for approval."
+            "Your tip has been submitted for review."
         )
 
         return redirect("home")
@@ -482,6 +588,7 @@ def share_tip(request):
         request,
         "knowledge/share_tip.html",
         {
-            "categories": categories
-        }
+            "categories": categories,
+            "locations": locations,
+        },
     )
