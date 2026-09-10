@@ -80,7 +80,7 @@ urlpatterns = [
             ),
 
             html_email_template_name=(
-                "knowledge/password_reset_email.html"
+                "knowledge/password_reset_m.html"
             ),
 
             subject_template_name=(
