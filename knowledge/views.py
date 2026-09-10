@@ -24,16 +24,22 @@ def home(request):
 
     if search_query:
 
-        knowledge_list = knowledge_list.filter(
-            title__icontains=search_query
-        ) | knowledge_list.filter(
-            description__icontains=search_query
-        ) | knowledge_list.filter(
-            category__name__icontains=search_query
-        ) | knowledge_list.filter(
-            location__name__icontains=search_query
-        ) | knowledge_list.filter(
-            location__city__icontains=search_query
+        knowledge_list = (
+            knowledge_list.filter(
+                title__icontains=search_query
+            )
+            | knowledge_list.filter(
+                description__icontains=search_query
+            )
+            | knowledge_list.filter(
+                category__name__icontains=search_query
+            )
+            | knowledge_list.filter(
+                location__name__icontains=search_query
+            )
+            | knowledge_list.filter(
+                location__city__icontains=search_query
+            )
         )
 
         knowledge_list = knowledge_list.distinct()
@@ -64,6 +70,19 @@ def knowledge_detail(request, pk):
         status="approved",
     )
 
+    # -----------------------------------------------------
+    # GET CURRENT USER'S VOTE
+    # -----------------------------------------------------
+
+    user_vote = None
+
+    if request.user.is_authenticated:
+
+        user_vote = Vote.objects.filter(
+            user=request.user,
+            knowledge=knowledge
+        ).first()
+
     return render(
         request,
         "knowledge/detail.html",
@@ -73,6 +92,7 @@ def knowledge_detail(request, pk):
         },
     )
 
+
 # =========================================================
 # KNOWLEDGE VOTE
 # =========================================================
@@ -80,8 +100,17 @@ def knowledge_detail(request, pk):
 @login_required(login_url="login")
 def vote_knowledge(request, pk):
 
+    # Only POST requests are allowed
     if request.method != "POST":
-        return redirect("knowledge_detail", pk=pk)
+
+        return redirect(
+            "knowledge_detail",
+            pk=pk
+        )
+
+    # -----------------------------------------------------
+    # GET KNOWLEDGE
+    # -----------------------------------------------------
 
     knowledge = get_object_or_404(
         Knowledge,
@@ -89,27 +118,43 @@ def vote_knowledge(request, pk):
         status="approved",
     )
 
-    vote_type = request.POST.get("vote_type")
+    # -----------------------------------------------------
+    # GET VOTE TYPE
+    # -----------------------------------------------------
 
+    vote_type = request.POST.get(
+        "vote_type",
+        ""
+    ).strip()
+
+    # Only these two values are accepted
     if vote_type not in ["agree", "disagree"]:
+
         return redirect(
             "knowledge_detail",
             pk=pk
         )
 
-    vote, created = Vote.objects.get_or_create(
+    # -----------------------------------------------------
+    # FIND EXISTING VOTE
+    # -----------------------------------------------------
+
+    vote = Vote.objects.filter(
         user=request.user,
-        knowledge=knowledge,
-        defaults={
-            "vote_type": vote_type
-        }
-    )
+        knowledge=knowledge
+    ).first()
 
-    # -------------------------------------------------
-    # NEW VOTE
-    # -------------------------------------------------
+    # =====================================================
+    # NO PREVIOUS VOTE
+    # =====================================================
 
-    if created:
+    if vote is None:
+
+        Vote.objects.create(
+            user=request.user,
+            knowledge=knowledge,
+            vote_type=vote_type,
+        )
 
         if vote_type == "agree":
 
@@ -119,61 +164,92 @@ def vote_knowledge(request, pk):
 
             knowledge.disagreements += 1
 
-    # -------------------------------------------------
-    # EXISTING VOTE
-    # -------------------------------------------------
+        knowledge.save(
+            update_fields=[
+                "confirmations",
+                "disagreements",
+            ]
+        )
+
+    # =====================================================
+    # SAME VOTE AGAIN
+    # =====================================================
+
+    elif vote.vote_type == vote_type:
+
+        # Remove the existing vote
+
+        if vote_type == "agree":
+
+            knowledge.confirmations = max(
+                0,
+                knowledge.confirmations - 1
+            )
+
+        else:
+
+            knowledge.disagreements = max(
+                0,
+                knowledge.disagreements - 1
+            )
+
+        vote.delete()
+
+        knowledge.save(
+            update_fields=[
+                "confirmations",
+                "disagreements",
+            ]
+        )
+
+    # =====================================================
+    # CHANGE VOTE
+    # =====================================================
 
     else:
 
-        # Same vote clicked again → remove vote
-        if vote.vote_type == vote_type:
+        # Previous vote was AGREE
+        if vote.vote_type == "agree":
 
-            if vote_type == "agree":
+            knowledge.confirmations = max(
+                0,
+                knowledge.confirmations - 1
+            )
 
-                knowledge.confirmations = max(
-                    0,
-                    knowledge.confirmations - 1
-                )
+            knowledge.disagreements += 1
 
-            else:
-
-                knowledge.disagreements = max(
-                    0,
-                    knowledge.disagreements - 1
-                )
-
-            vote.delete()
-
-        # Change vote
+        # Previous vote was DISAGREE
         else:
 
-            if vote.vote_type == "agree":
+            knowledge.disagreements = max(
+                0,
+                knowledge.disagreements - 1
+            )
 
-                knowledge.confirmations = max(
-                    0,
-                    knowledge.confirmations - 1
-                )
+            knowledge.confirmations += 1
 
-                knowledge.disagreements += 1
+        # Update user's vote
+        vote.vote_type = vote_type
+        vote.save(
+            update_fields=["vote_type"]
+        )
 
-            else:
+        knowledge.save(
+            update_fields=[
+                "confirmations",
+                "disagreements",
+            ]
+        )
 
-                knowledge.disagreements = max(
-                    0,
-                    knowledge.disagreements - 1
-                )
-
-                knowledge.confirmations += 1
-
-            vote.vote_type = vote_type
-            vote.save()
-
-    knowledge.save()
+    # -----------------------------------------------------
+    # RETURN TO DETAIL PAGE
+    # -----------------------------------------------------
 
     return redirect(
         "knowledge_detail",
         pk=pk
     )
+
 
 # =========================================================
 # REGISTER
@@ -210,7 +286,12 @@ def register(request):
         # REQUIRED FIELDS
         # -------------------------------------------------
 
-        if not username or not email or not password or not confirm_password:
+        if (
+            not username
+            or not email
+            or not password
+            or not confirm_password
+        ):
 
             messages.error(
                 request,
@@ -360,12 +441,16 @@ def user_login(request):
             )
 
         # -------------------------------------------------
-        # FIND USER
+        # FIND USER BY USERNAME
         # -------------------------------------------------
 
         user = User.objects.filter(
             username__iexact=login_input
         ).first()
+
+        # -------------------------------------------------
+        # FIND USER BY EMAIL
+        # -------------------------------------------------
 
         if user is None:
 
@@ -441,6 +526,10 @@ def user_login(request):
             request,
             f"Welcome back, {authenticated_user.username}!"
         )
+
+        # -------------------------------------------------
+        # NEXT URL
+        # -------------------------------------------------
 
         next_url = request.GET.get("next")
 
