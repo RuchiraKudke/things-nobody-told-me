@@ -228,8 +228,7 @@ EMAIL_BACKEND = (
     "knowledge.resend_backend.ResendEmailBackend"
 )
 
-DEFAULT_FROM_EMAIL = os.environ.get(
-    "DEFAULT_FROM_EMAIL",
+DEFAULT_FROM_EMAIL = (
     "Things Nobody Told Me <onboarding@resend.dev>"
 )
 

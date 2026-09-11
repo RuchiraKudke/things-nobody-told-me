@@ -824,6 +824,10 @@ def share_tip(request):
 # FORGOT PASSWORD
 # =========================================================
 
+# =========================================================
+# FORGOT PASSWORD - RESEND API
+# =========================================================
+
 def forgot_password(request):
 
     if request.method == "POST":
@@ -832,10 +836,6 @@ def forgot_password(request):
             "email",
             ""
         ).strip().lower()
-
-        # -------------------------------------------------
-        # EMAIL REQUIRED
-        # -------------------------------------------------
 
         if not email:
 
@@ -849,175 +849,142 @@ def forgot_password(request):
                 "knowledge/forgot_password.html"
             )
 
-        # -------------------------------------------------
-        # FIND USER
-        # -------------------------------------------------
-
         user = User.objects.filter(
-            email__iexact=email,
-            is_active=True
+            email__iexact=email
         ).first()
 
-        if user is None:
+        # -------------------------------------------------
+        # Always show same page for security
+        # -------------------------------------------------
 
-            messages.error(
-                request,
-                "No account was found with this email address."
+        if user:
+
+            from django.contrib.auth.tokens import (
+                default_token_generator
             )
 
-            return render(
-                request,
-                "knowledge/forgot_password.html"
+            from django.utils.http import (
+                urlsafe_base64_encode
             )
 
-        # -------------------------------------------------
-        # CREATE RESET TOKEN
-        # -------------------------------------------------
-
-        uid = urlsafe_base64_encode(
-            force_bytes(user.pk)
-        )
-
-        token = default_token_generator.make_token(
-            user
-        )
-
-        # -------------------------------------------------
-        # CREATE RESET URL
-        # -------------------------------------------------
-
-        reset_url = request.build_absolute_uri(
-            reverse(
-                "password_reset_confirm",
-                kwargs={
-                    "uidb64": uid,
-                    "token": token,
-                }
-            )
-        )
-
-        # -------------------------------------------------
-        # RESEND API KEY
-        # -------------------------------------------------
-
-        resend.api_key = os.environ.get(
-            "RESEND_API_KEY"
-        )
-
-        # -------------------------------------------------
-        # SEND EMAIL
-        # -------------------------------------------------
-
-        try:
-
-            resend.Emails.send(
-                {
-                    "from": (
-                        "Things Nobody Told Me "
-                        "<onboarding@resend.dev>"
-                    ),
-
-                    "to": [
-                        user.email
-                    ],
-
-                    "subject": (
-                        "Reset your password | "
-                        "Things Nobody Told Me"
-                    ),
-
-                    "html": f"""
-                        <div style="
-                            font-family: Arial, sans-serif;
-                            max-width: 600px;
-                            margin: auto;
-                            padding: 30px;
-                            color: #222;
-                        ">
-
-                            <h2>
-                                Reset your password
-                            </h2>
-
-                            <p>
-                                Hi {user.username},
-                            </p>
-
-                            <p>
-                                We received a request to reset
-                                the password for your
-                                Things Nobody Told Me account.
-                            </p>
-
-                            <p>
-                                Click the button below to
-                                create a new password:
-                            </p>
-
-                            <p>
-                                <a
-                                    href="{reset_url}"
-                                    style="
-                                        display: inline-block;
-                                        padding: 12px 20px;
-                                        background: #222;
-                                        color: white;
-                                        text-decoration: none;
-                                        border-radius: 8px;
-                                    "
-                                >
-                                    Reset Password
-                                </a>
-                            </p>
-
-                            <p>
-                                This link will expire
-                                automatically.
-                            </p>
-
-                            <p>
-                                If you did not request a
-                                password reset, you can safely
-                                ignore this email.
-                            </p>
-
-                            <p>
-                                — Things Nobody Told Me
-                            </p>
-
-                        </div>
-                    """
-                }
+            from django.utils.encoding import (
+                force_bytes
             )
 
-        except Exception:
-
-            messages.error(
-                request,
-                "Unable to send the reset email right now. Please try again later."
+            uid = urlsafe_base64_encode(
+                force_bytes(user.pk)
             )
 
-            return render(
-                request,
-                "knowledge/forgot_password.html"
+            token = default_token_generator.make_token(
+                user
             )
 
-        # -------------------------------------------------
-        # SUCCESS
-        # -------------------------------------------------
+            reset_url = (
+                request.build_absolute_uri(
+                    "/reset-password/"
+                )
+                + f"{uid}/{token}/"
+            )
 
-        messages.success(
-            request,
-            "Password reset link has been sent to your email."
-        )
+            subject = "Reset your password - Things Nobody Told Me"
+
+            html_message = f"""
+            <!DOCTYPE html>
+            <html>
+            <body style="
+                font-family: Arial, sans-serif;
+                background: #f5f5f5;
+                padding: 30px;
+            ">
+
+                <div style="
+                    max-width: 600px;
+                    margin: auto;
+                    background: white;
+                    padding: 30px;
+                    border-radius: 12px;
+                ">
+
+                    <h2>Reset your password</h2>
+
+                    <p>
+                        Hello {user.username},
+                    </p>
+
+                    <p>
+                        We received a request to reset the password
+                        for your Things Nobody Told Me account.
+                    </p>
+
+                    <p>
+                        Click the button below to create a new password:
+                    </p>
+
+                    <p>
+                        <a href="{reset_url}"
+                           style="
+                           display:inline-block;
+                           padding:12px 20px;
+                           background:#111;
+                           color:white;
+                           text-decoration:none;
+                           border-radius:8px;
+                           ">
+                           Reset Password
+                        </a>
+                    </p>
+
+                    <p>
+                        This link will expire in 1 hour.
+                    </p>
+
+                    <p>
+                        If you did not request a password reset,
+                        you can safely ignore this email.
+                    </p>
+
+                    <p>
+                        — Things Nobody Told Me
+                    </p>
+
+                </div>
+
+            </body>
+            </html>
+            """
+
+            try:
+
+                resend.api_key = os.environ.get(
+                    "RESEND_API_KEY",
+                    ""
+                )
+
+                resend.Emails.send(
+                    {
+                        "from": (
+                            "Things Nobody Told Me "
+                            "<onboarding@resend.dev>"
+                        ),
+
+                        "to": [email],
+
+                        "subject": subject,
+
+                        "html": html_message,
+                    }
+                )
+
+            except Exception as e:
+
+                print(
+                    "RESEND EMAIL ERROR:",
+                    str(e)
+                )
 
         return redirect(
             "password_reset_done"
         )
-
-    # -----------------------------------------------------
-    # GET REQUEST
-    # -----------------------------------------------------
 
     return render(
         request,
